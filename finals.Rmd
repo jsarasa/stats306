@@ -31,6 +31,10 @@ Hint: Some of the steps you may take while importing include:
 * skip the first several comment lines in the spread sheet
 * Importing the data as text first and then converting the relevant columns to different datatypes in step 2 below.
 
+```{r}
+
+```
+
 
 **2. Requirement-2 (5 pt)**
 
@@ -45,16 +49,35 @@ You could also remove the countries/regions that you are not interested in explo
 
 Explain your reasoning for each clean up step.
 
+```{r}
+
+```
+
+
 **3.  Requirement-3 (3 pt)**
 Replicate the 6 diagrams shown in the article.  Show only the '2024' projection values where ever you have both '2022' and '2024' displayed. 
 Show only the diagrams that are shown on the webpage with default options. 
 
+- population projections from 2024
+- projections broken down by world and continent
+- fertility rate in children/woman from 1950 - 2100
+- population 1950 to 2100
+- life expectancy from 1950 to 2023
+- annual net migration 1950 to 2023
+
+```{r}
+
+```
 
 **4.  Requirement-4 (12 pt)**
 
 Select United States related data, and any other country or region(s) of your choosing to perform EDA. Chart at least 12 additional diagrams that may show relationships like correlations, frequencies, trend charts, between various variables with plots of at least 3 different types (line, heatmap, pie, etc.). Every plot should have a title and the x/y axis should have legible labels without any label overlaps for full credit. 
 
 Summarize your interpretations after each chart.
+
+```{r}
+
+```
 
 
 **5. Requirement-5 (2 pt)**

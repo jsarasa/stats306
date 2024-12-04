@@ -8,6 +8,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(readxl)
 ```
 
 Throughout this course, you've dedicated yourself to refining your analytical abilities using R programming language. These skills are highly coveted in today's job market!  
@@ -32,7 +33,9 @@ Hint: Some of the steps you may take while importing include:
 * Importing the data as text first and then converting the relevant columns to different datatypes in step 2 below.
 
 ```{r}
-
+un_data = read_excel("data.xlsx", skip = 15)
+colnames(un_data) <- as.character(unlist(un_data[1, ]))
+un_data = un_data[-1,]
 ```
 
 

@@ -33,9 +33,13 @@ Hint: Some of the steps you may take while importing include:
 * Importing the data as text first and then converting the relevant columns to different datatypes in step 2 below.
 
 ```{r}
-un_data = read_excel("data.xlsx", skip = 15)
-colnames(un_data) <- as.character(unlist(un_data[1, ]))
-un_data = un_data[-1,]
+estimates = read_excel("data.xlsx", skip = 15, sheet = "Estimates")
+colnames(estimates) <- as.character(unlist(estimates[1, ]))
+estimates = estimates[-1,]
+
+mediums = read_excel("data.xlsx", skip = 15, sheet = "Medium variant")
+colnames(mediums) <- as.character(unlist(mediums[1, ]))
+mediums = mediums[-1,]
 ```
 
 
@@ -53,7 +57,27 @@ You could also remove the countries/regions that you are not interested in explo
 Explain your reasoning for each clean up step.
 
 ```{r}
+est_values <- estimates |> filter(Type != "Label/Separator") |> 
+  select(Index, Year:last_col()) |>
+  mutate(across(where(is.character), as.double, .names = '{col}')) 
+  # converts all numeric columns from characters into doubles
+  # removes Label/Separator type
+estimates$Index <- estimates$Index |> as.double() 
+  # creates key column of Index and converts to double
+estimates <- estimates |> select(Index, `Region, subregion, country or area *`, 
+                                 Type)
+  # selecting relevant columns from original database
+estimates <- estimates |> full_join(est_values, join_by(Index))
+  # only includes relevant data in Estimates
 
+med_values <- mediums |> filter(Type != "Label/Separator") |> 
+  select(Index, Year:last_col()) |>
+  mutate(across(where(is.character), as.double, .names = '{col}')) 
+mediums$Index <- mediums$Index |> as.double() 
+mediums <- mediums |> select(Index, `Region, subregion, country or area *`, 
+                                 Type)
+mediums <- mediums |> full_join(med_values, join_by(Index))
+  # replicated the above for the mediums dataset
 ```
 
 

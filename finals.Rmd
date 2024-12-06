@@ -158,6 +158,27 @@ Show only the diagrams that are shown on the webpage with default options.
 - annual net migration 1950 to 2023
 
 ```{r}
+# population projections from 2024
+
+# projections broken down by world and continent
+
+# fertility rate in children/woman from 1950 - 2100 (Jonathan)
+combined_data <- rbind(estimates, mediums)
+combined_data %>%
+  filter(region_subregion_country_area == 'World') %>% 
+  ggplot(aes(x = year, y = total_fertility_rate_live_births_per_woman)) +
+  geom_line() +
+  labs(title = "Fertility rate: children per woman, 1950 to 2100",
+       subtitle = "Projections from 2024 onwards are based on the UN's medium scenario.",
+       "Live Births Per Woman") 
+  
+rm(combined_data)
+
+# population 1950 to 2100
+
+# life expectancy from 1950 to 2023
+
+# annual net migration 1950 to 2023
 
 ```
 

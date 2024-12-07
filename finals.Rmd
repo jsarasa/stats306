@@ -249,12 +249,38 @@ estimates %>%
 # Question: Comparing 1950 vs 2020 vs 2100, what proportion of global population growth did each region of the world contribute?
 
 #Regions: USA, North America - USA, Latin America & Caribbean, Europe, Asia, Africa, Oceania
-
-estimates %>%
+graph6data <- estimates %>%
   rbind(mediums) %>% 
-  filter(region_subregion_country_area %in% c("USA", "Northern America", "Latin America and the Caribbean", "Europe", "Asia", "Africa", "Oceania")) %>% 
-  filter(year %in% c(1950, 2020, 2100)) %>% 
+  filter(region_subregion_country_area %in% c("United States of America", "Northern America", "Latin America and the Caribbean", 
+                                              "Europe", "Asia", "Africa", "Oceania")) %>% 
+  filter(year %in% c(1950, 2020, 2100)) %>%
+  group_by(year, region_subregion_country_area) %>%
+  summarise(total_population = sum(total_pop_january_thousands, na.rm = TRUE))
   
+# Remove USA from North America population
+graph6data <- graph6data %>% 
+  mutate(total_population = ifelse(region_subregion_country_area == "Northern America", total_population - sum(total_population[region_subregion_country_area == "USA"], na.rm = TRUE), total_population)) %>%
+  group_by(year) %>%
+  mutate(global_population = sum(total_population, na.rm = TRUE)) %>% 
+  mutate(proportion = total_population / global_population * 100)
+
+# pie chart
+graph6data %>%
+  ggplot(aes(x = "", y = proportion, fill = region_subregion_country_area)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  facet_wrap(~year) +
+  labs(
+    title = "Proportion of Global Population by Region",
+    subtitle = "Comparing Population Proportions in 1950, 2020, and 2100",
+    fill = "Region",
+    x = "",
+    y = "Proportion (%)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_blank(),
+  axis.ticks = element_blank(),
+  panel.grid = element_blank())
 
 # 7 Alicia
 # Question:

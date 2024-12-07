@@ -9,6 +9,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(readxl)
+library(scales)
 ```
 
 Throughout this course, you've dedicated yourself to refining your analytical abilities using R programming language. These skills are highly coveted in today's job market!  
@@ -67,7 +68,7 @@ estimates$Index <- estimates$Index |> as.double()
 estimates <- estimates |> select(Index, `Region, subregion, country or area *`, 
                                  Type)
   # selecting relevant columns from original database
-estimates <- estimates |> full_join(est_values, join_by(Index))
+estimates <- estimates |> full_join(est_values, join_by(Index)) |> filter(Type != "Label/Separator")
   # only includes relevant data in Estimates
 
 med_values <- mediums |> filter(Type != "Label/Separator") |> 
@@ -76,7 +77,7 @@ med_values <- mediums |> filter(Type != "Label/Separator") |>
 mediums$Index <- mediums$Index |> as.double() 
 mediums <- mediums |> select(Index, `Region, subregion, country or area *`, 
                                  Type)
-mediums <- mediums |> full_join(med_values, join_by(Index))
+mediums <- mediums |> full_join(med_values, join_by(Index)) |> filter(Type != "Label/Separator")
   # replicated the above for the mediums dataset
   
 #renaming columns
@@ -159,9 +160,36 @@ Show only the diagrams that are shown on the webpage with default options.
 
 ```{r}
 # population projections from 2024
+```
 
-# projections broken down by world and continent
+```{r}
+# projections broken down by world and continent (Shalini)
+population_projections <- mediums |> 
+  select(year, region_subregion_country_area, total_pop_january_thousands) |>
+  filter(region_subregion_country_area %in%
+           c("World", "Africa", "Asia", "Europe", "Northern America", "Latin America and the Carribean"))
 
+population_projections$facet = factor(population_projections$region_subregion_country_area, 
+                                      levels = c("World", "Africa", "Asia", "Europe", "Northern America",
+                                                 "Latin America and the Carribean"))
+
+population_projections |> 
+  ggplot(aes(x = year,
+             y = total_pop_january_thousands)) +
+  geom_line() +
+  facet_wrap(~facet, scales = "free",
+             ncol = 2) +
+  theme_minimal() +
+  scale_y_continuous(labels = unit_format(unit = "B", scale = 1e-6)) +
+  scale_x_continuous(breaks = c(2024, 2040, 2050, 2060, 2080, 2100)) +
+  labs(title = "UN Population Projections as of 2024",
+       subtitle = "Population projection from the UN World Population Prospects \nin its 2024 publication",
+       x = "Year",
+       y = "Population Projection (in billions)")
+```
+
+
+```{r}
 # fertility rate in children/woman from 1950 - 2100 (Jonathan)
 estimates %>%
   rbind(mediums) %>% 
@@ -180,9 +208,14 @@ estimates %>%
     color = "Region"
   ) +
   theme_classic()
+```
 
+```{r}
 # population 1950 to 2100
+```
 
+
+```{r}
 # life expectancy from 1950 to 2023 (Anusha)
 life_expectancy_data <- estimates %>%
   select(year, region_subregion_country_area, total_life_expectancy_at_birth_years) %>%
@@ -204,10 +237,12 @@ ggplot(life_expectancy_data, aes(x = year, y = total_life_expectancy_at_birth_ye
                                 "Asia" = "red", 
                                 "Africa" = "darkblue", 
                                 "Latin America and the Caribbean" = "green"))
-
-# annual net migration 1950 to 2023
-
 ```
+
+```{r}
+# annual net migration 1950 to 2023
+```
+
 
 **4.  Requirement-4 (12 pt)**
 
@@ -217,17 +252,36 @@ Summarize your interpretations after each chart.
 
 ```{r}
 # 1 Sophia
-# Question: 
+# Question:
+```
 
+```{r}
 # 2 Sophia
 # Question:
+```
 
+```{r}
 # 3 Shalini
-# Question:
+# Question: How is the median age changing in the United States, Australia, and the World?
 
+estimates |> select(region_subregion_country_area, med_age_july_years, year) |>
+  filter(region_subregion_country_area %in% c("United States of America", "Australia", "World")) |>
+  ggplot(aes(x = year, y = med_age_july_years,
+             color = region_subregion_country_area)) +
+  geom_line() +
+  facet_wrap(~region_subregion_country_area) +
+  labs(title = "Median Age in the US, Australia, and the World",
+       x = "Year",
+       y = "Median Age")
+```
+
+```{r}
 # 4 Shalini
 # Question:
+```
 
+
+```{r}
 # 5 Jonathan
 # Question: How has the Female/Male Life Expectancy Gap changed between the United States and Australia?
 estimates %>%
@@ -244,7 +298,9 @@ estimates %>%
     color = "Region"
   ) +
   theme_classic()
+```
 
+```{r}
 # 6 Jonathan
 # Question: Comparing 1950 vs 2020 vs 2100, what proportion of global population growth did each region of the world contribute?
 
@@ -284,26 +340,41 @@ graph6data %>%
   theme(axis.text.x = element_blank(),
   axis.ticks = element_blank(),
   panel.grid = element_blank())
+```
 
+```{r}
 # 7 Alicia
 # Question:
+```
 
+```{r}
 # 8 Alicia
 # Question:
+```
 
+```{r}
 # 9 Anusha
 # Question:
+```
 
+```{r}
 # 10 Anusha
 # Question:
+```
 
+```{r}
 # 11 Anusha
 # Question:
+```
 
+```{r}
 # 12 Alicia
 # Question:
-
 ```
+
+
+
+
 
 
 **5. Requirement-5 (2 pt)**

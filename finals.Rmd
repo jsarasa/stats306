@@ -354,8 +354,28 @@ graph6data %>%
 
 ```{r}
 # 9 Anusha
-# Question:
+# Question: How has population density and median age changed over time in the United States and Australia?
 ```
+aus_usa_data <- estimates %>%
+  filter(region_subregion_country_area %in% c("Australia", "United States of America"))
+
+long_data <- aus_usa_data %>%
+  pivot_longer(
+    cols = c(pop_density_july_person_per_sq_km, med_age_july_years),
+    names_to = "variable",
+    values_to = "value"
+  )
+
+ggplot(long_data, aes(x = year, y = value, linetype = variable)) +
+  geom_line(size = 1, color = "blue") +
+  facet_wrap(~region_subregion_country_area, scales = "free_y") +
+  labs(
+    title = "Population Density and Median Age Over Time",
+    x = "Year",
+    y = "Value",
+    linetype = "Metric"
+  ) +
+  theme(legend.position = "bottom")
 
 ```{r}
 # 10 Anusha

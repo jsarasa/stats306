@@ -277,7 +277,27 @@ estimates |> select(region_subregion_country_area, med_age_july_years, year) |>
 
 ```{r}
 # 4 Shalini
-# Question:
+# Question: How has total life expectancy at birth changed by continent at the beginning of each decade?
+
+estimates |> filter(region_subregion_country_area %in%
+                      c("Northern America", "South America", 
+                        "Oceania", "Europe", "Africa")) |>
+  filter(year == 1950 | year == 1960 |
+         year == 1970 | year == 1980 | 
+         year == 1990 | year == 2000 |
+         year == 2010 | year == 2020) |>
+  group_by(region_subregion_country_area, year) |>
+  mutate(mean_life_exp = mean(total_life_expectancy_at_birth_years)) |> 
+  select(region_subregion_country_area, year, mean_life_exp) |>
+  ggplot(aes(x = year, y = mean_life_exp, fill = region_subregion_country_area)) +
+  geom_col() +
+  facet_wrap(~region_subregion_country_area) +
+  labs(title = "Total Life Expectancy by Continent and Decade", 
+       subtitle = "Based on life expectancy calculations at birth", 
+       x = "Decade", 
+       y = "Life Expectancy (in years)", 
+       fill = "Continent")
+                      
 ```
 
 
@@ -355,7 +375,6 @@ graph6data %>%
 ```{r}
 # 9 Anusha
 # Question: How has population density and median age changed over time in the United States and Australia?
-```
 aus_usa_data <- estimates %>%
   filter(region_subregion_country_area %in% c("Australia", "United States of America"))
 
@@ -377,10 +396,12 @@ ggplot(long_data, aes(x = year, y = value, linetype = variable)) +
   ) +
   theme(legend.position = "bottom")
 
+```
+
 ```{r}
 # 10 Anusha
 # Question: How do the infant mortality rates in Australia and the United States compare across different decades?
-```
+
 estimates <- estimates %>%
   mutate(decade = floor(year / 10) * 10) 
 
@@ -397,11 +418,12 @@ ggplot(filtered_data, aes(x = factor(decade),
        x = "Decade",
        y = "Average Infant Mortality Rate (Per 1,000 Live Births)",
        fill = "Country")
+```
 
 ```{r}
 # 11 Anusha
 # Question: 
-```
+
 filtered_data <- estimates %>%
   filter(region_subregion_country_area %in% c("Australia", "United States of America")) %>%
   select(year, region_subregion_country_area, net_migration_rate_per_1000)
@@ -415,6 +437,7 @@ ggplot(filtered_data, aes(x = year,
        x = "Year",
        y = "Net Migration Rate (Per 1,000 People)",
        color = "Region")
+```
 
 
 ```{r}

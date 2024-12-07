@@ -259,7 +259,7 @@ graph6data <- estimates %>%
   
 # Remove USA from North America population
 graph6data <- graph6data %>% 
-  mutate(total_population = ifelse(region_subregion_country_area == "Northern America", total_population - sum(total_population[region_subregion_country_area == "USA"], na.rm = TRUE), total_population)) %>%
+  mutate(total_population = ifelse(region_subregion_country_area == "Northern America", total_population - sum(total_population[region_subregion_country_area == "United States of America"], na.rm = TRUE), total_population)) %>%
   group_by(year) %>%
   mutate(global_population = sum(total_population, na.rm = TRUE)) %>% 
   mutate(proportion = total_population / global_population * 100) %>% 

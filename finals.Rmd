@@ -272,7 +272,7 @@ graph6data %>%
   facet_wrap(~year) +
   labs(
     title = "Proportion of Global Population by Region",
-    subtitle = "Comparing Population Proportions in 1950, 2020, and 2100",
+    subtitle = "Comparing Population Proportions in 1950, 2020, and 2100 (Projected)",
     fill = "Region",
     x = "",
     y = "Proportion (%)"

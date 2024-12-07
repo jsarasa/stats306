@@ -196,6 +196,41 @@ Select United States related data, and any other country or region(s) of your ch
 Summarize your interpretations after each chart.
 
 ```{r}
+# 1 Sophia
+# Question: 
+
+# 2 Sophia
+# Question:
+
+# 3 Shalini
+# Question:
+
+# 4 Shalini
+# Question:
+
+# 5 Jonathan
+# Question:
+
+# 6 Jonathan
+# Question:
+
+# 7 Alicia
+# Question:
+
+# 8 Alicia
+# Question:
+
+# 9 Anusha
+# Question:
+
+# 10 Anusha
+# Question:
+
+# 11 Anusha
+# Question:
+
+# 12 Alicia
+# Question:
 
 ```
 

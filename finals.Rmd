@@ -262,7 +262,10 @@ graph6data <- graph6data %>%
   mutate(total_population = ifelse(region_subregion_country_area == "Northern America", total_population - sum(total_population[region_subregion_country_area == "USA"], na.rm = TRUE), total_population)) %>%
   group_by(year) %>%
   mutate(global_population = sum(total_population, na.rm = TRUE)) %>% 
-  mutate(proportion = total_population / global_population * 100)
+  mutate(proportion = total_population / global_population * 100) %>% 
+  mutate(region_subregion_country_area = ifelse(region_subregion_country_area == "Northern America", "Northern America (excluding USA)", region_subregion_country_area))
+  
+
 
 # pie chart
 graph6data %>%

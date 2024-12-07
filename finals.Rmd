@@ -379,8 +379,24 @@ ggplot(long_data, aes(x = year, y = value, linetype = variable)) +
 
 ```{r}
 # 10 Anusha
-# Question:
+# Question: How do the infant mortality rates in Australia and the United States compare across different decades?
 ```
+estimates <- estimates %>%
+  mutate(decade = floor(year / 10) * 10) 
+
+filtered_data <- estimates %>%
+  filter(region_subregion_country_area %in% c("Australia", "United States of America")) %>%
+  group_by(decade, region_subregion_country_area) %>%
+  summarise(avg_infant_mortality_rate = mean(infant_morality_rate_infant_deaths_per_1000_births, na.rm = TRUE))
+
+ggplot(filtered_data, aes(x = factor(decade), 
+                          y = avg_infant_mortality_rate, 
+                          fill = region_subregion_country_area)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Infant Mortality Rates by Decade",
+       x = "Decade",
+       y = "Average Infant Mortality Rate (Per 1,000 Live Births)",
+       fill = "Country")
 
 ```{r}
 # 11 Anusha

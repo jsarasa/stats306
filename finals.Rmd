@@ -400,8 +400,22 @@ ggplot(filtered_data, aes(x = factor(decade),
 
 ```{r}
 # 11 Anusha
-# Question:
+# Question: 
 ```
+filtered_data <- estimates %>%
+  filter(region_subregion_country_area %in% c("Australia", "United States of America")) %>%
+  select(year, region_subregion_country_area, net_migration_rate_per_1000)
+
+ggplot(filtered_data, aes(x = year, 
+                          y = net_migration_rate_per_1000, 
+                          color = region_subregion_country_area, 
+                          group = region_subregion_country_area)) +
+  geom_line(size = 1) +
+  labs(title = "Net Migration Rates Over Time for Australia and United States of America",
+       x = "Year",
+       y = "Net Migration Rate (Per 1,000 People)",
+       color = "Region")
+
 
 ```{r}
 # 12 Alicia

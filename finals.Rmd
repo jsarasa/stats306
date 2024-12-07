@@ -374,28 +374,33 @@ graph6data %>%
 
 ```{r}
 # 9 Anusha
-# Question: How has population density and median age changed over time in the United States and Australia?
-aus_usa_data <- estimates %>%
-  filter(region_subregion_country_area %in% c("Australia", "United States of America"))
+# Question: How have mortality rates across different age groups changed over time in Australia?
+australia_data <- estimates %>%
+  filter(region_subregion_country_area == "Australia") %>%
+  select(year, 
+         infant_morality_rate_infant_deaths_per_1000_births, 
+         "deaths_under_age_5_per_1,000_live_births", 
+         total_male_mortality_before_age_40_per_1000_births, 
+         total_mortality_before_age_60_per_1000_births) %>%
+  pivot_longer(cols = starts_with("infant_morality_rate"):starts_with("total_mortality"),
+               names_to = "age_group",
+               values_to = "mortality_rate")
 
-long_data <- aus_usa_data %>%
-  pivot_longer(
-    cols = c(pop_density_july_person_per_sq_km, med_age_july_years),
-    names_to = "variable",
-    values_to = "value"
-  )
+australia_data$age_group <- recode(australia_data$age_group,
+                                   "infant_morality_rate_infant_deaths_per_1000_births" = "Infant Mortality (Per 1,000 Births)",
+                                   "deaths_under_age_5_per_1,000_live_births" = "Under Age 5 (Per 1,000 Births)",
+                                   "total_male_mortality_before_age_40_per_1000_births" = "Total Mortality <40 (Per 1,000)",
+                                   "total_mortality_before_age_60_per_1000_births" = "Total Mortality <60 (Per 1,000)")
 
-ggplot(long_data, aes(x = year, y = value, linetype = variable)) +
-  geom_line(size = 1, color = "blue") +
-  facet_wrap(~region_subregion_country_area, scales = "free_y") +
-  labs(
-    title = "Population Density and Median Age Over Time",
-    x = "Year",
-    y = "Value",
-    linetype = "Metric"
-  ) +
-  theme(legend.position = "bottom")
-
+ggplot(australia_data, aes(x = year, 
+                           y = mortality_rate, 
+                           color = age_group, 
+                           group = age_group)) +
+  geom_line(size = 1) +
+  labs(title = "Mortality Rates by Age Group Over Time in Australia",
+       x = "Year",
+       y = "Mortality Rate (Per 1,000)",
+       color = "Age Group")
 ```
 
 ```{r}
@@ -422,7 +427,7 @@ ggplot(filtered_data, aes(x = factor(decade),
 
 ```{r}
 # 11 Anusha
-# Question: 
+# Question: How have net migration rates changed over time in Australia vs United States?
 
 filtered_data <- estimates %>%
   filter(region_subregion_country_area %in% c("Australia", "United States of America")) %>%

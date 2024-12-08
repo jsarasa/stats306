@@ -479,13 +479,14 @@ australia_data <- estimates %>%
          total_mortality_before_age_60_per_1000_births) %>%
   pivot_longer(cols = starts_with("infant_morality_rate"):starts_with("total_mortality"),
                names_to = "age_group",
-               values_to = "mortality_rate")
-
-australia_data$age_group <- recode(australia_data$age_group,
-                                   "infant_morality_rate_infant_deaths_per_1000_births" = "Infant Mortality (Per 1,000 Births)",
-                                   "deaths_under_age_5_per_1,000_live_births" = "Under Age 5 (Per 1,000 Births)",
-                                   "total_male_mortality_before_age_40_per_1000_births" = "Total Mortality <40 (Per 1,000)",
-                                   "total_mortality_before_age_60_per_1000_births" = "Total Mortality <60 (Per 1,000)")
+               values_to = "mortality_rate") %>%
+  mutate(age_group = case_when(
+    age_group == "infant_morality_rate_infant_deaths_per_1000_births" ~ "Infant Mortality (Per 1,000 Births)",
+    age_group == "deaths_under_age_5_per_1,000_live_births" ~ "Under Age 5 (Per 1,000 Births)",
+    age_group == "total_male_mortality_before_age_40_per_1000_births" ~ "Total Mortality <40 (Per 1,000)",
+    age_group == "total_mortality_before_age_60_per_1000_births" ~ "Total Mortality <60 (Per 1,000)",
+    TRUE ~ age_group
+  ))
 
 ggplot(australia_data, aes(x = year, 
                            y = mortality_rate, 

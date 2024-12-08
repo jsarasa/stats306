@@ -159,7 +159,36 @@ Show only the diagrams that are shown on the webpage with default options.
 - annual net migration 1950 to 2023
 
 ```{r}
-# population projections from 2024
+# Population Projections from 2024 (Sophia)
+
+mediums %>% select(year) %>% filter(!is.na(year)) %>% range() # 2024 - 2100
+estimates %>% select(year) %>% filter(!is.na(year)) %>% range() # 1950 - 2023
+
+# Need to bind the rows from the two dataframes
+combined <- rbind(estimates, mediums)
+combined %>% select(year) %>% filter(!is.na(year)) %>% range() # 1950 - 2100
+
+combined %>%
+  select(year, region_subregion_country_area, total_pop_july_thousands) %>%
+  filter(!is.na(year)) %>%
+  filter(year >= "2022") %>%
+  filter(region_subregion_country_area == "World") %>%
+  ggplot(mapping = aes(x = year, y = total_pop_july_thousands)) +
+  geom_line() +
+  geom_point(size = 0.5) +
+  scale_x_continuous(breaks = c(2024, 2040, 2050, 2060, 2070, 2080, 2090, 2100)) +
+
+  # Use an escape sequence to get a new line (to match the graph from article)
+  labs(title = "How do UN Population projections compare to the previous\nrevision? World",
+       subtitle = str_wrap("The medium population projection from the UN's World Population Prospects in its 2024 publication, compared to its 2022 revision."),
+       x = "Year",
+       y = "Projection",
+       caption = "Data Source: UN, World Population Prospects (2024)\nOurWorldinData.org/population-growth | CC BY") +
+  
+  # Modify the caption position using hjust (see citation below)
+  # Citation: https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/#change-caption-position
+  theme(plot.caption = element_text(hjust = 0),
+        plot.title = element_text(face = "bold"))
 ```
 
 ```{r}
@@ -240,7 +269,28 @@ ggplot(life_expectancy_data, aes(x = year, y = total_life_expectancy_at_birth_ye
 ```
 
 ```{r}
-# annual net migration 1950 to 2023
+# Annual Net Migration 1950 to 2023 (Sophia)
+
+estimates %>%
+  select(net_migration_rate_per_1000, year, region_subregion_country_area) %>%
+  filter(!is.na(year)) %>%
+  filter(region_subregion_country_area == "Ukraine") %>%
+  filter(year <= "2023" & year >= "1950") %>%
+  ggplot(mapping = aes(x = year, y = net_migration_rate_per_1000)) +
+  geom_line(color = "blue") +
+  geom_point(size = 0.5, color = "blue") + # Need to make the points/dots smaller
+  scale_x_continuous(breaks = c(1950, 1960, 1970, 1980, 1990, 2000, 2010, 2023)) + 
+  scale_y_continuous(breaks = c(-500, -400, -300, -200, -100, 0),
+                     labels = c("-5 million", "-4 million", "-3 million", "-2 million", "-1 million", "0")) +
+  labs(title = "Annual net migration, 1950 to 2023",
+       subtitle = str_wrap("The total number of immigrants (people moving into a given country) minus the number of emigrants (people moving out of the country)."),
+       x = "Year",
+       y = "Net Migration",
+       
+       # Use an escape sequence in the caption to get a new line
+       caption = "Data Source: UN, World Population Prospects (2024)\nOurWorldinData.org/population-growth | CC BY") +
+  theme(plot.caption = element_text(hjust = 0),
+        plot.title = element_text(face = "bold")) 
 ```
 
 
@@ -252,12 +302,47 @@ Summarize your interpretations after each chart.
 
 ```{r}
 # 1 Sophia
-# Question:
+# Question: How has the female life expectancy at age 15 evovled over the last 50 years in less developed regions compared to more developed regions? Is there a convergence in the female life expectancy rates?
+
+estimates %>%
+  select(region_subregion_country_area, year, female_life_expectancy_at_age_15_years) %>%
+  filter(region_subregion_country_area %in% c("More developed regions", "Less developed regions")) %>% 
+  ggplot(mapping = aes(x = year, y = female_life_expectancy_at_age_15_years, color = region_subregion_country_area)) +
+  geom_line() +
+  geom_point(size = 0.5) +
+  scale_x_continuous(limits = c(1950, 2023)) %>%
+  scale_y_continuous(breaks = c(45, 50, 55, 60, 65, 70, 75)) %>%
+  labs(title = "Evolution of Female Life Expectancy at Age 15",
+       subtitle = str_wrap("Comparing less developed regions to more developed regions around the world."),
+       x = "Year",
+       y = "Female Life Expectancy at Age 15 (in Years)",
+       color = "Region",
+       caption = "Data Source: UN, World Population Prospects (2022) – processed by Our World in Data") +
+  theme(plot.title = element_text(face = "bold"),
+        plot.subtitle = element_text(face = "italic"))
 ```
+
+
 
 ```{r}
 # 2 Sophia
-# Question:
+# Question: Which income range has the largest variability in the number of births? Are counries of different income levels similar in terms of the average number of births? 
+
+estimates %>%
+  select(region_subregion_country_area, births_thousands) %>%
+  filter(region_subregion_country_area %in% c("Lower-middle-income countries","Upper-middle-income countries", "High-and-upper-middle-income countries","Low-and-Lower-middle-income countries")) %>%
+  ggplot(mapping = aes(x = region_subregion_country_area, y = births_thousands)) +
+  geom_boxplot(linewidth = 0.4, fill = "lightblue") +
+  stat_summary(fun = mean, size = 3, color = "yellow", geom = "point") +
+  scale_x_discrete(labels = c("High-and-Upper-Middle", "Low-and-Lower-Middle", "Lowerr-Middle", "Upper-Middle")) +
+  labs(title = "Variability in the Number of Births by Countries",
+       subtitle = "Comparing countries of different income levels",
+       x = "Income Level of Country",
+       y = "Births (in thousands)",
+       caption = "Data Source: UN, World Population Prospects (2022) – processed by Our World in Data") +
+   theme(plot.title = element_text(face = "bold"),
+         plot.subtitle = element_text(face = "italic"),
+         plot.caption = element_text(hjust = 0))
 ```
 
 ```{r}

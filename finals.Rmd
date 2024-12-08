@@ -549,6 +549,39 @@ You can choose to predict the same metric the UN provides (e.g., future populati
 
 How significantly do your population projections diverge from those of the United Nations? Provide a comparison of the two.  If you choose a different projection for which there is no UN data to compare with, then this comparison is not required.
 
+```{r}
+# ~70:30 Training to Predicting Ratio
+# Training based only on 2023 numbers. We're predicting the 2100 number for future population of countries using population, fertility, mortality, migration data, & total life expectancy at birth.
+# 237 Unique countries/areas 
+# Train on 165, predict the future populations of the last 72
+
+unique_countries <- estimates %>%
+  filter(type == "Country/Area") %>%
+  pull(region_subregion_country_area) %>%
+  unique()
+  
+training_regions <- unique_countries %>%
+  head(165)
+predict_regions <- unique_countries %>%
+  tail(72)
+
+# Should be false:
+any(training_regions %in% predict_regions)
+
+training_data_2023 <- estimates %>% 
+  rbind(mediums) %>%
+  filter(year == 2023) %>% 
+  filter(region_subregion_country_area %in% training_regions) %>% 
+  select(year, region_subregion_country_area, total_pop_january_thousands,
+         crude_birth_rate_per_1000_pop, crude_death_rate_deaths_per_1000_population,
+         total_life_expectancy_at_birth_years, net_migration_rate_per_1000)
+
+training_data_2100 <- estimates %>% 
+  rbind(mediums) %>%
+  filter(year == 2100) %>% 
+  filter(region_subregion_country_area %in% training_regions) %>% 
+  select(region_subregion_country_area, total_pop_january_thousands)
+```
 
 **6.  Requirement-5 (1 pt)**
 

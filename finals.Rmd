@@ -245,7 +245,17 @@ estimates %>%
 ```
 
 ```{r}
-# population 1950 to 2100
+# population 1950 to 2100 (Alicia)
+estimates |> rbind (mediums) |>
+  filter(region_subregion_country_area %in% c("India", "China")) |>
+ggplot(aes(x = year, y = total_pop_july_thousands, color = region_subregion_country_area)) +
+  geom_line() +
+  labs(title = "Population Projections: India vs. China",
+       subtitle = "Projection for 2024 based on UN's medium scenario",
+       x = "Year",
+       y = "Population",
+       color = "Country") +
+  theme_minimal()
 ```
 
 

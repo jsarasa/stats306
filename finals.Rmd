@@ -1,6 +1,6 @@
 ---
 title: "DATASCI 306, Fall 2024, Final Group Project"
-author: "Shalini Asokkumar, Sophia Giuliani, Jonathan Sarasa, Alicia Zhou"
+author: "Shalini Asokkumar, Anusha Chinthamaduka, Sophia Giuliani, Jonathan Sarasa, Alicia Zhou"
 output:
   pdf_document: default
 ---

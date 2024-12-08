@@ -174,8 +174,8 @@ combined %>%
   filter(year >= "2022") %>%
   filter(region_subregion_country_area == "World") %>%
   ggplot(mapping = aes(x = year, y = total_pop_july_thousands)) +
-  geom_line() +
-  geom_point(size = 0.5) +
+  geom_line(color = "darkred") +
+  geom_point(color = "darkred", size = 0.5) +
   scale_x_continuous(breaks = c(2024, 2040, 2050, 2060, 2070, 2080, 2090, 2100)) +
 
   # Use an escape sequence to get a new line (to match the graph from article)
@@ -184,6 +184,10 @@ combined %>%
        x = "Year",
        y = "Projection",
        caption = "Data Source: UN, World Population Prospects (2024)\nOurWorldinData.org/population-growth | CC BY") +
+
+  # Modify the y-axis tick marks
+  # Citation: https://scales.r-lib.org/reference/unit_format.html
+  scale_y_continuous(labels = unit_format(unit = "Billion", scale = 1e-6)) +
   
   # Modify the caption position using hjust (see citation below)
   # Citation: https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/#change-caption-position
@@ -300,10 +304,15 @@ Select United States related data, and any other country or region(s) of your ch
 
 Summarize your interpretations after each chart.
 
-```{r}
-# 1 Sophia
-# Question: How has the female life expectancy at age 15 evovled over the last 50 years in less developed regions compared to more developed regions? Is there a convergence in the female life expectancy rates?
 
+
+
+
+1. Diagram 1: Sophia Giuliani
+  - **Question:** How has the female life expectancy at age 15 evovled since 1950 in less developed regions compared to more developed regions? Is there a convergence in the female life expectancy rates?
+  - **Interpretation of Diagram:** Since 1950, the female life expectancy (at age 15) in less developed and in more developed regions demonstrate a relatively similar trend, despite a couple differences as noted in the graph below. That is, while the female life expectancy was increasing at a relatively constant rate from 1950 to just before 2020 in more developed regions, the upward trend in less developed regions was interrupted by a decline in the female life exptectancy for a couple years prior to 1960. However, in 1960, the female life expectancy rate in less developed countries spiked back to its previous levels and continued to increase until just before 2020. In what appears to be the year 2019, the female life expectancy rate declined in both less developed and more developed regions. Following this decline, the female life expectancy increased a couple years later. COVID-19 could be a plausable explanation for this drop that is demostrated on the graph below. In summary, there has not been a convergence in the female life expectancy rates between the two regions. However, the gap between the two regions has become more narrow overtime. 
+
+```{r}
 estimates %>%
   select(region_subregion_country_area, year, female_life_expectancy_at_age_15_years) %>%
   filter(region_subregion_country_area %in% c("More developed regions", "Less developed regions")) %>% 
@@ -322,19 +331,18 @@ estimates %>%
         plot.subtitle = element_text(face = "italic"))
 ```
 
-
+2. Diagram 2: Sophia Giuliani
+  - **Question:** Which income range has the largest variability in the number of births? Are counries of different income levels similar in terms of the average number of births? 
+  - **Interpretation of Diagram:** To answer this question entailing one categorical variable and one quantitive variable, box-plots can be of great visualizations. The variability in the number of births across each of the four income levels is indicated by the IQR which represents the spread of the middle 50% of the data (citation: https://www.statology.org/box-plot-variability/). Thus, based on the diagram below, the Low-and-Lower-Middle income level countries appear to have the largest variability in the number of births, followed by countries of Lower-Middle income levels. On the other hand, Upper-Middle income level countires demonstrate the smallest variation in the number of births as the IQR is the smallest. Furthermore, we see that Low-and-Lower-Middle income level countries have the highest average number of births. It appears as though, both High-and-Upper and Lower-Middle income level countries are similar in terms of their average number of births. 
 
 ```{r}
-# 2 Sophia
-# Question: Which income range has the largest variability in the number of births? Are counries of different income levels similar in terms of the average number of births? 
-
 estimates %>%
   select(region_subregion_country_area, births_thousands) %>%
   filter(region_subregion_country_area %in% c("Lower-middle-income countries","Upper-middle-income countries", "High-and-upper-middle-income countries","Low-and-Lower-middle-income countries")) %>%
   ggplot(mapping = aes(x = region_subregion_country_area, y = births_thousands)) +
   geom_boxplot(linewidth = 0.4, fill = "lightblue") +
   stat_summary(fun = mean, size = 3, color = "yellow", geom = "point") +
-  scale_x_discrete(labels = c("High-and-Upper-Middle", "Low-and-Lower-Middle", "Lowerr-Middle", "Upper-Middle")) +
+  scale_x_discrete(labels = c("High-and-Upper-Middle", "Low-and-Lower-Middle", "Lower-Middle", "Upper-Middle")) +
   labs(title = "Variability in the Number of Births by Countries",
        subtitle = "Comparing countries of different income levels",
        x = "Income Level of Country",
@@ -343,7 +351,9 @@ estimates %>%
    theme(plot.title = element_text(face = "bold"),
          plot.subtitle = element_text(face = "italic"),
          plot.caption = element_text(hjust = 0))
+
 ```
+
 
 ```{r}
 # 3 Shalini

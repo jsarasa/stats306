@@ -600,10 +600,16 @@ training_data <- merge(x=training_data_2023,y=training_data_2100,
              by="region_subregion_country_area", all.x=TRUE)
 
 # Look at histograms to see if any log transformations are needed
+hist(training_data$total_pop_january_thousands)
+hist(training_data$crude_birth_rate_per_1000_pop)
+hist(training_data$crude_death_rate_deaths_per_1000_population)
+hist(training_data$net_migration_rate_per_1000)
+hist(training_data$pop_2100)
 
+# total_pop_january_thousands and pop_2100 both have strong right skews, so we will use log transformations for boht
 
 #linear model
-lm_2100_pop <- lm(pop_2100 ~ total_pop_january_thousands + crude_birth_rate_per_1000_pop + crude_death_rate_deaths_per_1000_population + net_migration_rate_per_1000, data = training_data)
+lm_2100_pop <- lm(log(pop_2100) ~ log(total_pop_january_thousands) + crude_birth_rate_per_1000_pop + crude_death_rate_deaths_per_1000_population + net_migration_rate_per_1000, data = training_data)
 
 summary(lm_2100_pop)
 
@@ -629,8 +635,11 @@ predict_data_2100 <- predict_data_2100 %>%
 predict_data <- merge(x=predict_data_2023,y=predict_data_2100, 
              by="region_subregion_country_area", all.x=TRUE)
 
+#Predicted values
+predicted_values <- round(exp(predict(lm_2100_pop, newdata = predict_data)),3)
+
 # Put values of linear model into predicted_2100_pop
-predict_data <- mutate(predict_data, predicted_2100_pop = predict(lm_2100_pop, newdata = predict_data))
+predict_data <- mutate(predict_data, predicted_2100_pop = predicted_values)
 ```
 
 **6.  Requirement-5 (1 pt)**

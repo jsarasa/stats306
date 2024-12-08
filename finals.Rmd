@@ -333,7 +333,7 @@ estimates %>%
 ```
 
 2. Diagram 2: Sophia Giuliani
-  - **Question:** Which income range has the largest variability in the number of births? Are counries of different income levels similar in terms of the average number of births? 
+  - **Question:** Which income range has the largest variability in the number of births? Are countries of different income levels similar in terms of the average number of births? 
   - **Interpretation of Diagram:** To answer this question entailing one categorical variable and one quantitive variable, box-plots can be of great visualizations. The variability in the number of births across each of the four income levels is indicated by the IQR which represents the spread of the middle 50% of the data (citation: https://www.statology.org/box-plot-variability/). Thus, based on the diagram below, the Low-and-Lower-Middle income level countries appear to have the largest variability in the number of births, followed by countries of Lower-Middle income levels. On the other hand, Upper-Middle income level countires demonstrate the smallest variation in the number of births as the IQR is the smallest. Furthermore, we see that Low-and-Lower-Middle income level countries have the highest average number of births. It appears as though, both High-and-Upper and Lower-Middle income level countries are similar in terms of their average number of births. 
 
 ```{r}
@@ -371,12 +371,14 @@ estimates |> select(region_subregion_country_area, med_age_july_years, year) |>
        y = "Median Age")
 ```
 
+2. Diagram 4: Shalini Asokkumar Giuliani
+  - **Question:** How has total life expectancy at birth changed by continent at the beginning of each decade? 
+  - **Interpretation of Diagram:** Before creating this model, I assumed that North America, Oceania, and Europe were going to consistently have the highest life expectancy rates. This can be supported by how these predominantly white areas have institutionalized a higher standard of living than coutnries in the Global South. They were able to build their systems based on colonialism and, now, continue to benefit from importing goods made with manual labor. They also have more robust and established health systems with government support. I was surprised to see that Asia and South America showed such promising and significant improvements in life expectancy; however, I think this can be reconciled with the growing prominence of the BIRCs countries in the global economy, or Brazil, Russia, India, and China. They are now seeing increased investment in their commodities from countries in the Global North, and foreign interest in supporting their economic development. As a result of being given access to increased financial resources, it makes sense that citizens are living longer, and presumably, better quality lives. 
+
 ```{r}
-# 4 Shalini
-# Question: How has total life expectancy at birth changed by continent at the beginning of each decade?
 
 estimates |> filter(region_subregion_country_area %in%
-                      c("Northern America", "South America", 
+                      c("Northern America", "South America", "Asia", 
                         "Oceania", "Europe", "Africa")) |>
   filter(year == 1950 | year == 1960 |
          year == 1970 | year == 1980 | 
@@ -385,14 +387,15 @@ estimates |> filter(region_subregion_country_area %in%
   group_by(region_subregion_country_area, year) |>
   mutate(mean_life_exp = mean(total_life_expectancy_at_birth_years)) |> 
   select(region_subregion_country_area, year, mean_life_exp) |>
-  ggplot(aes(x = year, y = mean_life_exp, fill = region_subregion_country_area)) +
-  geom_col() +
+  ggplot(aes(x = year, y = mean_life_exp, color = region_subregion_country_area)) +
+  geom_line() +
+  geom_point() +
   facet_wrap(~region_subregion_country_area) +
   labs(title = "Total Life Expectancy by Continent and Decade", 
        subtitle = "Based on life expectancy calculations at birth", 
        x = "Decade", 
        y = "Life Expectancy (in years)", 
-       fill = "Continent")
+       color = "Continent")
                       
 ```
 

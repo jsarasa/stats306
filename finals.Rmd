@@ -592,6 +592,34 @@ training_data <- merge(x=training_data_2023,y=training_data_2100,
 lm_2100_pop <- lm(pop_2100 ~ total_pop_january_thousands + crude_birth_rate_per_1000_pop + crude_death_rate_deaths_per_1000_population + total_life_expectancy_at_birth_years + net_migration_rate_per_1000, data = training_data)
 
 summary(lm_2100_pop)
+
+# Predicting future population of regions
+predict_data_2023 <- estimates %>% 
+  rbind(mediums) %>%
+  filter(year == 2023) %>% 
+  filter(region_subregion_country_area %in% predict_regions) %>% 
+  select(year, region_subregion_country_area, total_pop_january_thousands,
+         crude_birth_rate_per_1000_pop, crude_death_rate_deaths_per_1000_population,
+         total_life_expectancy_at_birth_years, net_migration_rate_per_1000)
+
+predict_data_2100 <- estimates %>% 
+  rbind(mediums) %>%
+  filter(year == 2100) %>% 
+  filter(region_subregion_country_area %in% predict_regions) %>% 
+  select(region_subregion_country_area, total_pop_january_thousands)
+
+# Rename column for clarity
+predict_data_2100 <- predict_data_2100 %>%
+  rename(pop_2100 = total_pop_january_thousands)
+
+predict_data <- merge(x=predict_data_2023,y=predict_data_2100, 
+             by="region_subregion_country_area", all.x=TRUE)
+
+# Predict using linear model
+predict_2100_pop_values <- predict(lm_2100_pop, predict_data)
+
+# Put values of linear model into predicted_2100_pop
+predict_data <- mutate(predict_data, predicted_2100_pop = predict_2100_pop_values)
 ```
 
 **6.  Requirement-5 (1 pt)**

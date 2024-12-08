@@ -640,6 +640,10 @@ predicted_values <- round(exp(predict(lm_2100_pop, newdata = predict_data)),3)
 
 # Put values of linear model into predicted_2100_pop
 predict_data <- mutate(predict_data, predicted_2100_pop = predicted_values)
+
+#pop_2100 is the UN's predicted population value for 2100, predicted_2100_pop is ours
+
+# Comparison with original prediction
 ```
 
 **6.  Requirement-5 (1 pt)**

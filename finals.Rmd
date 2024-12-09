@@ -484,11 +484,38 @@ graph6data %>%
 ```{r}
 # 7 Alicia
 # Question:
+estimates |> rbind(mediums) |> 
+  filter (region_subregion_country_area %in% c("China", "United States of America")) |>
+  select (region_subregion_country_area, year, rate_of_natural_change_per_1000, infant_morality_rate_infant_deaths_per_1000_births) |>
+
+ggplot(aes(x = infant_morality_rate_infant_deaths_per_1000_births, y = rate_of_natural_change_per_1000, color = region_subregion_country_area)) + 
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) + 
+  labs(title = "Impact of Infant Mortality Rates on Natural Change Rates",
+       subtitle = "Comparison between China and the United States",
+       x = "Infant Mortality Rate",
+       y = "Rate of Natural Change per 1,000 People",
+       color = "Country") + 
+  theme_minimal()
 ```
 
 ```{r}
 # 8 Alicia
 # Question:
+estimates |> 
+  filter(region_subregion_country_area %in% c("High-and-upper-middle-income countries", "Low-and-Lower-middle-income countries", "High-income countries", "Low-and-middle-income countries", "Middle-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "Low-income countries", "No income group available")) |>
+   select(region_subregion_country_area, sex_ratio_at_birth_males_per_100_female_births, year) |>
+  ggplot(aes(x = reorder(region_subregion_country_area, - sex_ratio_at_birth_males_per_100_female_births), y = sex_ratio_at_birth_males_per_100_female_births, fill = region_subregion_country_area)) + 
+  geom_bar(stat = "identity", width = 0.7, show.legend = FALSE) +
+  scale_fill_brewer(palette = "Paired") +
+  labs(title = "Average Sex Ratio at Birth by Income Range",
+       x = "Income Range",
+       y = "Average Sex Ratio at Birth (Males per 100 Female)") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(7500, 8000)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8),
+        plot.title = element_text(hjust = 0.5), 
+        plot.margin = margin(1,1,1,1, "cm")) 
 ```
 
 ```{r}
@@ -568,6 +595,17 @@ ggplot(filtered_data, aes(x = year,
 ```{r}
 # 12 Alicia
 # Question:
+estimates |>
+  filter(region_subregion_country_area %in% c("Australia", "United States of America")) |>
+  select(region_subregion_country_area, year, live_births_surviving_to_age_1_thousands) |>
+  
+  ggplot(aes(x = year, y = live_births_surviving_to_age_1_thousands, group = region_subregion_country_area, color = region_subregion_country_area)) +
+  geom_line(size = 1.2) +
+  labs(title = "Comparison of Live Births Surviving to Age 1 Between Australia and US",
+       x = "Year",
+       y = "Live Births Surviving to Age 1 (thousands)",
+       color = "Country") +
+  theme_minimal()
 ```
 
 

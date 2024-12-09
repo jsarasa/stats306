@@ -362,28 +362,33 @@ estimates %>%
 ```
 
 3. Diagram 3: Shalini Asokkumar
-  - **Question:** How have birth and death rates in the BRICs countries changed over time, and how are they predicted to continue? 
-  - **Interpretation of Diagram:** Befo
+  - **Question:** How is population growth affected by a country's development status? 
+  - **Interpretation of Diagram:** The least shocking of the results is shown in the high and upper middle income countries bracket, where the net births and deaths remained relatively stable except for a few shocks here and there. These can likely be associated with times of economic turmoil and income struggles. However, it is important to note, that recently these countries populations are predicted to be shrinking at an increasing rate. Many economists are calling this a cause for concern as it means there may be fewer people able to take on existing jobs. Across all 4 graphs, we see, that contrary to increasing life expectancy, people in all countries are, on average, expected to have fewer children. This is especially interesting to note in the Lower Middle Income Countries and the Low and Low Middle income countries, because their populations have been growing at an increasing rate for since before the 50s. Likely, this was due to cultural practices of having large families. So what can we attribute the decrease to? Recently, in higher income countries, as the costs of living increase, people have intentionally opted to have smaller families, and having no kids is also becoming a more popular idea. It could also be due to resource constraints. Parents want to give their kids the best lives possible, and may not want to have kids if they cannot ensure that possibility. The death rates in the lower income countries are likely increasing due to the growth in wealth disparities between higher and lower income nations, and a declining birth rate does not seem to be helping. 
 
 ```{r}
-estimates |> 
+est_and_med <- rbind(estimates, mediums)
+est_and_med |> 
   filter(region_subregion_country_area %in% c("Lower-middle-income countries",
                                               "Upper-middle-income countries",
                                               "High-and-upper-middle-income countries",
                                               "Low-and-Lower-middle-income countries")) |>
   group_by(region_subregion_country_area, year) |>
-  summarise(`Average Birth Rate` = mean(births_thousands, na.rm = T), 
-            `Average Death Rate` = mean(total_deaths_thousands, na.rm = T)) |>
-  pivot_longer(cols = c("Average Birth Rate", "Average Death Rate"), names_to = "rate_type", values_to = "averages") |>
+  summarise(`Average Births` = mean(births_thousands, na.rm = T), 
+            `Average Deaths` = mean(total_deaths_thousands, na.rm = T), 
+            `Difference in Averages` = `Average Births` - `Average Deaths`) |>
+  pivot_longer(cols = c("Average Births", "Average Deaths", "Difference in Averages"), 
+               names_to = "rate_type", values_to = "averages") |>
   ggplot(aes(x = year, y = averages, color = rate_type)) +
-  scale_color_manual(values=c('chartreuse4','#DAB1DA'))+
+  scale_color_manual(values=c('chartreuse4','#DAB1DA', "lightblue"))+
   geom_line() +
+  scale_y_continuous(labels = unit_format(unit = "K", scale = 1e-3)) +
   facet_wrap(~region_subregion_country_area) +
-  labs(title = "Population growth versus Industrial Development", 
-       subtitle = "From 1950 - 2023", 
+  labs(title = "Population Growth versus Industrial Development", 
+       subtitle = "from 1950 - 2100", 
        x = "Year", 
-       y = "Average number of Births and Deaths \nby Region (in thousands)", 
-       color = "Rate")
+       y = "Average Number of Births and Deaths \nby Region (in thousands)", 
+       color = "Measurement") +
+  theme_minimal()
 ```
 
 4. Diagram 4: Shalini Asokkumar
@@ -410,7 +415,8 @@ estimates |> filter(region_subregion_country_area %in%
        subtitle = "Based on life expectancy calculations at birth", 
        x = "Decade", 
        y = "Life Expectancy (in years)", 
-       color = "Continent")
+       color = "Continent") +
+  theme_minimal()
                       
 ```
 

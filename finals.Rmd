@@ -690,7 +690,7 @@ predict_regions <- unique_countries %>%
 any(training_regions %in% predict_regions)
 
 training_data_2023 <- estimates %>% 
-  rbind(mediums) %>%
+  bind_rows(mediums) %>%
   filter(year == 2023) %>% 
   filter(region_subregion_country_area %in% training_regions) %>% 
   select(year, region_subregion_country_area, total_pop_january_thousands,
@@ -698,7 +698,7 @@ training_data_2023 <- estimates %>%
          net_migration_rate_per_1000)
 
 training_data_2100 <- estimates %>% 
-  rbind(mediums) %>%
+  bind_rows(mediums) %>%
   filter(year == 2100) %>% 
   filter(region_subregion_country_area %in% training_regions) %>% 
   select(region_subregion_country_area, total_pop_january_thousands)
@@ -717,7 +717,7 @@ hist(training_data$crude_death_rate_deaths_per_1000_population)
 hist(training_data$net_migration_rate_per_1000)
 hist(training_data$pop_2100)
 
-# total_pop_january_thousands and pop_2100 both have strong right skews, so we will use log transformations for boht
+# total_pop_january_thousands and pop_2100 both have strong right skews, so we will use log transformations for both
 
 #linear model
 lm_2100_pop <- lm(log(pop_2100) ~ log(total_pop_january_thousands) + crude_birth_rate_per_1000_pop + crude_death_rate_deaths_per_1000_population + net_migration_rate_per_1000, data = training_data)
@@ -726,7 +726,7 @@ summary(lm_2100_pop)
 
 # Predicting future population of regions
 predict_data_2023 <- estimates %>% 
-  rbind(mediums) %>%
+  bind_rows(mediums) %>%
   filter(year == 2023) %>% 
   filter(region_subregion_country_area %in% predict_regions) %>% 
   select(year, region_subregion_country_area, total_pop_january_thousands,
@@ -734,7 +734,7 @@ predict_data_2023 <- estimates %>%
          net_migration_rate_per_1000)
 
 predict_data_2100 <- estimates %>% 
-  rbind(mediums) %>%
+  bind_rows(mediums) %>%
   filter(year == 2100) %>% 
   filter(region_subregion_country_area %in% predict_regions) %>% 
   select(region_subregion_country_area, total_pop_january_thousands)
@@ -749,13 +749,9 @@ predict_data <- merge(x=predict_data_2023,y=predict_data_2100,
 #Predicted values
 predicted_values <- round(exp(predict(lm_2100_pop, newdata = predict_data)),3)
 
+#pop_2100 is the UN's predicted population value for 2100, predicted_2100_pop is ours
 # Put values of linear model into predicted_2100_pop
 predict_data <- mutate(predict_data, predicted_2100_pop = predicted_values)
-
-#pop_2100 is the UN's predicted population value for 2100, predicted_2100_pop is ours
-
-# Comparison with original prediction
-
 ```
 
 

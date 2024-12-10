@@ -176,13 +176,17 @@ combined <- rbind(estimates, mediums)
 combined %>% select(year) %>% filter(!is.na(year)) %>% range() # 1950 - 2100
 
 combined %>%
-  select(year, region_subregion_country_area, total_pop_july_thousands) %>%
+  select(year, 
+         region_subregion_country_area, 
+         total_pop_july_thousands) %>%
   filter(!is.na(year)) %>%
   filter(year >= "2022") %>%
   filter(region_subregion_country_area == "World") %>%
-  ggplot(mapping = aes(x = year, y = total_pop_july_thousands)) +
+  ggplot(mapping = aes(x = year, 
+                       y = total_pop_july_thousands)) +
   geom_line(color = "darkred") +
-  geom_point(color = "darkred", size = 0.5) +
+  geom_point(color = "darkred", 
+             size = 0.5) +
   scale_x_continuous(breaks = c(2024, 2040, 2050, 2060, 2070, 2080, 2090, 2100)) +
 
   # Use an escape sequence to get a new line (to match the graph from article)
@@ -194,7 +198,8 @@ combined %>%
 
   # Modify the y-axis tick marks
   # Citation: https://scales.r-lib.org/reference/unit_format.html
-  scale_y_continuous(labels = unit_format(unit = "Billion", scale = 1e-6)) +
+  scale_y_continuous(labels = unit_format(unit = "Billion", 
+                                          scale = 1e-6)) +
   
   # Modify the caption position using hjust (see citation below)
   # Citation: https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/#change-caption-position
@@ -297,16 +302,25 @@ ggplot(life_expectancy_data, aes(x = year, y = total_life_expectancy_at_birth_ye
 # Annual Net Migration 1950 to 2023 (Sophia)
 
 estimates %>%
-  select(net_migration_rate_per_1000, year, region_subregion_country_area) %>%
+  select(net_migration_rate_per_1000, 
+         year, 
+         region_subregion_country_area) %>%
   filter(!is.na(year)) %>%
   filter(region_subregion_country_area == "Ukraine") %>%
   filter(year <= "2023" & year >= "1950") %>%
-  ggplot(mapping = aes(x = year, y = net_migration_rate_per_1000)) +
+  ggplot(mapping = aes(x = year, 
+                       y = net_migration_rate_per_1000)) +
   geom_line(color = "blue") +
-  geom_point(size = 0.5, color = "blue") + # Need to make the points/dots smaller
+  geom_point(size = 0.5, 
+             color = "blue") + # Need to make the points/dots smaller
   scale_x_continuous(breaks = c(1950, 1960, 1970, 1980, 1990, 2000, 2010, 2023)) + 
   scale_y_continuous(breaks = c(-500, -400, -300, -200, -100, 0),
-                     labels = c("-5 million", "-4 million", "-3 million", "-2 million", "-1 million", "0")) +
+                     labels = c("-5 million", 
+                                "-4 million", 
+                                "-3 million", 
+                                "-2 million", 
+                                "-1 million", 
+                                "0")) +
   labs(title = "Annual net migration, 1950 to 2023",
        subtitle = str_wrap("The total number of immigrants (people moving into a given country) minus the number of emigrants (people moving out of the country)."),
        x = "Year",
@@ -331,9 +345,14 @@ Summarize your interpretations after each chart.
 
 ```{r}
 estimates %>%
-  select(region_subregion_country_area, year, female_life_expectancy_at_age_15_years) %>%
-  filter(region_subregion_country_area %in% c("More developed regions", "Less developed regions")) %>% 
-  ggplot(mapping = aes(x = year, y = female_life_expectancy_at_age_15_years, color = region_subregion_country_area)) +
+  select(region_subregion_country_area, 
+         year, 
+         female_life_expectancy_at_age_15_years) %>%
+  filter(region_subregion_country_area %in% c("More developed regions", 
+                                              "Less developed regions")) %>% 
+  ggplot(mapping = aes(x = year, 
+                       y = female_life_expectancy_at_age_15_years, 
+                       color = region_subregion_country_area)) +
   geom_line() +
   geom_point(size = 0.5) +
   scale_x_continuous(limits = c(1950, 2023)) %>%
@@ -354,12 +373,24 @@ estimates %>%
 
 ```{r}
 estimates %>%
-  select(region_subregion_country_area, births_thousands) %>%
-  filter(region_subregion_country_area %in% c("Lower-middle-income countries","Upper-middle-income countries", "High-and-upper-middle-income countries","Low-and-Lower-middle-income countries")) %>%
-  ggplot(mapping = aes(x = region_subregion_country_area, y = births_thousands)) +
-  geom_boxplot(linewidth = 0.4, fill = "lightblue") +
-  stat_summary(fun = mean, size = 3, color = "yellow", geom = "point") +
-  scale_x_discrete(labels = c("High-and-Upper-Middle", "Low-and-Lower-Middle", "Lower-Middle", "Upper-Middle")) +
+  select(region_subregion_country_area, 
+         births_thousands) %>%
+  filter(region_subregion_country_area %in% c("Lower-middle-income countries",
+                                              "Upper-middle-income countries",
+                                              "High-and-upper-middle-income countries",
+                                              "Low-and-Lower-middle-income countries")) %>%
+  ggplot(mapping = aes(x = region_subregion_country_area, 
+                       y = births_thousands)) +
+  geom_boxplot(linewidth = 0.4, 
+               fill = "lightblue") +
+  stat_summary(fun = mean, 
+               size = 3, 
+               color = "yellow", 
+               geom = "point") +
+  scale_x_discrete(labels = c("High-and-Upper-Middle", 
+                              "Low-and-Lower-Middle", 
+                              "Lower-Middle", 
+                              "Upper-Middle")) +
   labs(title = "Variability in the Number of Births by Countries",
        subtitle = "Comparing countries of different income levels",
        x = "Income Level of Country",

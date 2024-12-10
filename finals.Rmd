@@ -566,9 +566,11 @@ ggplot(aes(x = reorder(region_subregion_country_area, - AverageSexRatio), y = Av
         plot.title = element_text(hjust = 0.5), 
         plot.margin = margin(1,1,1,1, "cm"))
 ```
+
 9 Anusha
 - **Question:** How have mortality rates across different age groups changed over time in Australia?
 - **Interpretation**: This graph illustrates mortality rates in Australia (from 1950 to 2020) by various age groups (infant mortality, total mortality under age 40, total mortality under age 60, and under age 5). In the graph, all age groups show a significant decline in mortality rates over time, which can be attributed to the rapid improvements in health care and living conditions. The mortality rates of those under 60 showed the most significant and steepest decline. This could be due to the increased access in healthcare that occurred in the 1980s due to the introduction of Australia's Universal Health Care system. In addition, infant mortality rates and under 5 mortality rates seem to converge close to zero around 2020. These declines are most likely a result from advancements in neonatal care and widespread vaccination programs. Overall by 2020, mortality rates across all age groups have decreased dramatically, emphasizing Australia's progress in public health and the near-zero rates for infant and under-5 mortality, showcase the significant advancement in reducing preventable deaths in Australia.
+
 ```{r}
 australia_data <- estimates %>%
   filter(region_subregion_country_area == "Australia") %>%
@@ -602,6 +604,7 @@ ggplot(australia_data, aes(x = year,
 10 Anusha
 **Question:** How do the infant mortality rates in Australia and the United States compare across different decades?
 **Interpretation** This bar chart compares the average infant mortality rates (per 1,000 live births) in Australia and the United States across decades, spanning from 1950 to 2020. According to the graph, it appears that both Australia and the United States experienced a significant decline in infant mortality rates over the decades. The United States seems to have a consistently higher infant mortality rate than Australia across all decades but it also had a more significant decline. The introduction of Medicaid in 1965 could be a contributor to this steep decline. By 2020, it seems like both countries achieved a low infant mortality rate of approximately 2–4 per 1,000 live births which reflects significant advancements in public health initiatives.
+
 ```{r}
 
 estimates <- estimates %>%
@@ -621,6 +624,7 @@ ggplot(filtered_data, aes(x = factor(decade),
        y = "Average Infant Mortality Rate (Per 1,000 Live Births)",
        fill = "Country")
 ```
+
 11 Anusha
 **Question:** How have net migration rates changed over time in Australia vs United States?
 **Interpretation:** This line chart displays net migration rates (per 1,000 people) for Australia and the United States from 1950 to 2020. According to the chart, Australia's net migration rates appear to be consistently higher and more variable than the United States over time. This could be due to Australia's more active pro-immigration policies than the US as well as Australia's reliance on immigration for economic growth (specifically to address labor shortages by immigrating skilled migrants). There also appears to be a peak net migration rate in Australia around 1970. This could be due to the "End of the White Australia Policy", which made it easier for individuals of other races to immigrate to Australia. There is also a sharp decline in immigration for both countries in 2020, which is a direct result of the COVID-19 pandemic and the strict immigration laws that were present during this time.

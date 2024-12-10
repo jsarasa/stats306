@@ -537,8 +537,8 @@ graph6data %>%
 ```
 
 7. Diagram 7 Alicia Zhou
-**Question:** How do the Infant Mortality Rates of China and the United States affect their natural change rates over the past 2 decades?
-**Interpretation:** The data for China spans a wide range of infant mortality rates compared to the U.S. This indicates that there have been significant variations in healthcare access, socioeconomic conditions, or other factors affecting infant mortality over time or across regions. But the variability in natural change rate is more moderate in China compared to the U.S. This suggests that other factors have dampened the impact of infant mortaility rate on natural change rates. For the U.S, the low variability in infant mortality reflects consistent healthcare outcomes across regions and time. On the other hand, the high variability in natural changes suggest that other factors besides infant mortality rates are influencing natural change rates. The relatively steeper positive slope for the U.S. highlights a more sensitive elationship between infant mortality and natural change rates. Small changes in infant mortality seem to correspond to larger changes in the natural change rate, possibly due to the demographic dynamics of a more developed population. The flater slope for China indicates that the historical one-child policy may have diminished the impact.
+  - **Question:** How do the Infant Mortality Rates of China and the United States affect their natural change rates over the past 2 decades?
+  - **Interpretation:** The data for China spans a wide range of infant mortality rates compared to the U.S. This indicates that there have been significant variations in healthcare access, socioeconomic conditions, or other factors affecting infant mortality over time or across regions. But the variability in natural change rate is more moderate in China compared to the U.S. This suggests that other factors have dampened the impact of infant mortaility rate on natural change rates. For the U.S, the low variability in infant mortality reflects consistent healthcare outcomes across regions and time. On the other hand, the high variability in natural changes suggest that other factors besides infant mortality rates are influencing natural change rates. The relatively steeper positive slope for the U.S. highlights a more sensitive elationship between infant mortality and natural change rates. Small changes in infant mortality seem to correspond to larger changes in the natural change rate, possibly due to the demographic dynamics of a more developed population. The flater slope for China indicates that the historical one-child policy may have diminished the impact.
 
 ```{r}
 # Set the time frame
@@ -563,9 +563,8 @@ ggplot(aes(x = infant_morality_rate_infant_deaths_per_1000_births, y = rate_of_n
 ```
 
 8. Diagram 8 Alicia Zhou
-**Question:** How does the income range of different countries correlate with the sex ratio at birth, and are there observable differences?
-**Interpretation:** The income group with the highest sex ratio is upper-middle-income countries (around 110 males per 100 females), the income group with the lowest sex ratio is low-income countries (around 104 males per 100 females). In general, lower the income, lower the average sex ratio at birth. However, surprisingly, high-income countries have the second lowest sex ratio at birth, reflecting relatively balanced demographic pattern. The elevated ratios in upper-middle-income and high-income countries might reflect gender preferences, particularly in regions where son preference exists. It could also indicate the use of medical technologies like prenatal sex determination followed by selective practices. Low-income countries may reflect minimal external intervention in the natural sex ratio due to limited access to such technologies or stronger adherence to natural birth outcomes.
-
+  - **Question:** How does the income range of different countries correlate with the sex ratio at birth, and are there observable differences?
+  - **Interpretation:** The income group with the highest sex ratio is upper-middle-income countries (around 110 males per 100 females), the income group with the lowest sex ratio is low-income countries (around 104 males per 100 females). In general, lower the income, lower the average sex ratio at birth. However, surprisingly, high-income countries have the second lowest sex ratio at birth, reflecting relatively balanced demographic pattern. The elevated ratios in upper-middle-income and high-income countries might reflect gender preferences, particularly in regions where son preference exists. It could also indicate the use of medical technologies like prenatal sex determination followed by selective practices. Low-income countries may reflect minimal external intervention in the natural sex ratio due to limited access to such technologies or stronger adherence to natural birth outcomes.
 ```{r}
 
 # Set Time Frame
@@ -594,8 +593,8 @@ ggplot(aes(x = reorder(region_subregion_country_area, - AverageSexRatio), y = Av
 ```
 
 9. Diagram 9 Anusha Chinthamaduka
-- **Question:** How have mortality rates across different age groups changed over time in Australia?
-- **Interpretation**: This graph illustrates mortality rates in Australia (from 1950 to 2020) by various age groups (infant mortality, total mortality under age 40, total mortality under age 60, and under age 5). In the graph, all age groups show a significant decline in mortality rates over time, which can be attributed to the rapid improvements in health care and living conditions. The mortality rates of those under 60 showed the most significant and steepest decline. This could be due to the increased access in healthcare that occurred in the 1980s due to the introduction of Australia's Universal Health Care system. In addition, infant mortality rates and under 5 mortality rates seem to converge close to zero around 2020. These declines are most likely a result from advancements in neonatal care and widespread vaccination programs. Overall by 2020, mortality rates across all age groups have decreased dramatically, emphasizing Australia's progress in public health and the near-zero rates for infant and under-5 mortality, showcase the significant advancement in reducing preventable deaths in Australia.
+  - **Question:** How have mortality rates across different age groups changed over time in Australia?
+  - **Interpretation**: This graph illustrates mortality rates in Australia (from 1950 to 2020) by various age groups (infant mortality, total mortality under age 40, total mortality under age 60, and under age 5). In the graph, all age groups show a significant decline in mortality rates over time, which can be attributed to the rapid improvements in health care and living conditions. The mortality rates of those under 60 showed the most significant and steepest decline. This could be due to the increased access in healthcare that occurred in the 1980s due to the introduction of Australia's Universal Health Care system. In addition, infant mortality rates and under 5 mortality rates seem to converge close to zero around 2020. These declines are most likely a result from advancements in neonatal care and widespread vaccination programs. Overall by 2020, mortality rates across all age groups have decreased dramatically, emphasizing Australia's progress in public health and the near-zero rates for infant and under-5 mortality, showcase the significant advancement in reducing preventable deaths in Australia.
 
 ```{r}
 australia_data <- estimates %>%
@@ -628,8 +627,8 @@ ggplot(australia_data, aes(x = year,
 ```
 
 10. Diagram 10 Anusha Chinthamaduka
-**Question:** How do the infant mortality rates in Australia and the United States compare across different decades?
-**Interpretation** This bar chart compares the average infant mortality rates (per 1,000 live births) in Australia and the United States across decades, spanning from 1950 to 2020. According to the graph, it appears that both Australia and the United States experienced a significant decline in infant mortality rates over the decades. The United States seems to have a consistently higher infant mortality rate than Australia across all decades but it also had a more significant decline. The introduction of Medicaid in 1965 could be a contributor to this steep decline. By 2020, it seems like both countries achieved a low infant mortality rate of approximately 2–4 per 1,000 live births which reflects significant advancements in public health initiatives.
+  - **Question:** How do the infant mortality rates in Australia and the United States compare across different decades?
+  - **Interpretation** This bar chart compares the average infant mortality rates (per 1,000 live births) in Australia and the United States across decades, spanning from 1950 to 2020. According to the graph, it appears that both Australia and the United States experienced a significant decline in infant mortality rates over the decades. The United States seems to have a consistently higher infant mortality rate than Australia across all decades but it also had a more significant decline. The introduction of Medicaid in 1965 could be a contributor to this steep decline. By 2020, it seems like both countries achieved a low infant mortality rate of approximately 2–4 per 1,000 live births which reflects significant advancements in public health initiatives.
 
 ```{r}
 
@@ -652,8 +651,9 @@ ggplot(filtered_data, aes(x = factor(decade),
 ```
 
 11. Diagram 11 Anusha Chinthamaduka
-**Question:** How have net migration rates changed over time in Australia vs United States?
-**Interpretation:** This line chart displays net migration rates (per 1,000 people) for Australia and the United States from 1950 to 2020. According to the chart, Australia's net migration rates appear to be consistently higher and more variable than the United States over time. This could be due to Australia's more active pro-immigration policies than the US as well as Australia's reliance on immigration for economic growth (specifically to address labor shortages by immigrating skilled migrants). There also appears to be a peak net migration rate in Australia around 1970. This could be due to the "End of the White Australia Policy", which made it easier for individuals of other races to immigrate to Australia. There is also a sharp decline in immigration for both countries in 2020, which is a direct result of the COVID-19 pandemic and the strict immigration laws that were present during this time.
+  - **Question:** How have net migration rates changed over time in Australia vs United States?
+  - **Interpretation:** This line chart displays net migration rates (per 1,000 people) for Australia and the United States from 1950 to 2020. According to the chart, Australia's net migration rates appear to be consistently higher and more variable than the United States over time. This could be due to Australia's more active pro-immigration policies than the US as well as Australia's reliance on immigration for economic growth (specifically to address labor shortages by immigrating skilled migrants). There also appears to be a peak net migration rate in Australia around 1970. This could be due to the "End of the White Australia Policy", which made it easier for individuals of other races to immigrate to Australia. There is also a sharp decline in immigration for both countries in 2020, which is a direct result of the COVID-19 pandemic and the strict immigration laws that were present during this time.
+
 
 ```{r}
 
@@ -673,8 +673,9 @@ ggplot(filtered_data, aes(x = year,
 ```
 
 12. Diagram 12 Alicia Zhou
-**Question:**
-**Interpretation:** The number of live births surviving to age 1 in the U.S. is significantly higher than in Australia throughout the time period. This reflects the much larger population in the U.S. The U.S. line shows an increase during the post-World War II baby boom (1940s–1960s) and a noticeable decline in the 1970s, which aligns with demographic changes such as lower fertility rates following the baby boom. The numbers stabilize after the 1980s but exhibit a slight decline in the 2000s, reflecting trends in lower birth rates or other demographic changes. The number of live births surviving to age 1 in Australia remains relatively constant. The trend shows a gradual increase over time but without significant fluctuations. This steady trend reflects Australia’s relatively stable fertility rates and improvements in healthcare access over the years.
+  - **Question:**
+  - **Interpretation:** The number of live births surviving to age 1 in the U.S. is significantly higher than in Australia throughout the time period. This reflects the much larger population in the U.S. The U.S. line shows an increase during the post-World War II baby boom (1940s–1960s) and a noticeable decline in the 1970s, which aligns with demographic changes such as lower fertility rates following the baby boom. The numbers stabilize after the 1980s but exhibit a slight decline in the 2000s, reflecting trends in lower birth rates or other demographic changes. The number of live births surviving to age 1 in Australia remains relatively constant. The trend shows a gradual increase over time but without significant fluctuations. This steady trend reflects Australia’s relatively stable fertility rates and improvements in healthcare access over the years.
+
 
 ```{r}
 # Get necessary data

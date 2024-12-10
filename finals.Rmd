@@ -769,12 +769,15 @@ predict_data |> left_join(mediums2100, join_by(region_subregion_country_area))  
   mutate(diff = mlr_pop - undata, 
          avg_diff = mean(diff), # mean differences between estimates and actual data
          med_diff = median(diff), # median differences
-         sq_error = (undata - mlr_pop)^2, 
-         sse = sum(sq_error), 
-         mse = 1/47 * sse) |> select(-sse, -sq_error)
+         sr = (undata - mlr_pop)^2,
+         ssr = sum(sr),
+         st = (undata - mean(undata))^2, 
+         sst = sum(st),
+         r_sq = 1 - (ssr / sst)) |> select(-sr, -ssr, -st, -sst) # calculating R^2 between UN model and predicted
 ```
 **Analysis** Our intentions with creating this model were to try to estimate the data as best as we could with the fewest amount of predictors possible. After looking into how the UN recommended predicting data, we decided to create a model that accounted for birth rates, death rates, and migratory populations. In order to ensure our model met the proper assumptions of a linear regression model, we created histograms to depict the actual data and correct, via log transformations, to become more normally distributed. The two variables with a strong right skew, total population and the predicted populations, received a log transformation as a result. We also considered multicollinearity, especially between the life expectancy data and births and death. To minimize error, we omitted the variable from the model as it did not explain additional variability in the explanatory variable.
-As a result, we ended up with a model with a very high R^2, meaning that we were able to explain 99.39% of the variation in the explanatory variable with our chosen predictors. However, it is likely that the UN did not rely solely on a multiple linear regression model to inform their estimates. We can deduce this from the fact that our model used the same general categories as theirs, but the values do not completely align. Their methodology states that their probabilistic scenarios included uncertainty in their predictors, which differs from ours in that our data was only informed by one data set, and theirs incorporated the predictions and aggregates of 2,000. These discrepancies in methodology, chosen predictors, and in data collection are likely the cause of the differences in our estimates. 
+As a result, we ended up with a model with a very high R^2, meaning that we were able to explain 99.39% of the variation in the the total population estimates with our chosen predictors. However, it is likely that the UN did not rely solely on a multiple linear regression model to inform their estimates. We can deduce this from the fact that our model used the same general categories as theirs, but the values do not completely align. Their methodology states that their probabilistic scenarios included uncertainty in their predictors, which differs from ours in that our data was only informed by one data set, and theirs incorporated the predictions and aggregates of 2,000. These discrepancies in methodology, chosen predictors, and in data collection are likely the cause of the differences in our estimates. 
+Lastly, we used the UN model as the base in a secondary R^2 analysis, and the R^2 was 0.9557. In other words, our model was able to explain 95.57% of the variation in the UN data, with the remaining 4% a representation of their additional research. Overall, our model is a good approximation of that of the UN one, and can hopefully be used for external application.
 
 United Nations, Department of Economic and Social Affairs, Population Division (2024). World Population
 Prospects 2024: Methodology of the United Nations population estimates and projections. UN

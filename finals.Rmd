@@ -59,7 +59,7 @@ You could also remove the countries/regions that you are not interested in explo
 Explain your reasoning for each clean up step.
 
 ```{r}
-est_values <- estimates |> filter(Type != "Label/Separator") |> 
+est_values <- estimates |> 
   select(Index, Year:last_col()) |>
   mutate(across(where(is.character), as.double, .names = '{col}')) 
   # converts all numeric columns from characters into doubles
@@ -72,7 +72,7 @@ estimates <- estimates |> select(Index, `Region, subregion, country or area *`,
 estimates <- estimates |> full_join(est_values, join_by(Index)) |> filter(Type != "Label/Separator")
   # only includes relevant data in Estimates
 
-med_values <- mediums |> filter(Type != "Label/Separator") |> 
+med_values <- mediums |>
   select(Index, Year:last_col()) |>
   mutate(across(where(is.character), as.double, .names = '{col}')) 
 mediums$Index <- mediums$Index |> as.double() 
@@ -373,30 +373,24 @@ estimates %>%
 
 3. Diagram 3: Shalini Asokkumar
   - **Question:** How is population growth affected by a country's development status? 
-  - **Interpretation of Diagram:** The least shocking of the results is shown in the high and upper middle income countries bracket, where the net births and deaths remained relatively stable except for a few shocks here and there. These can likely be associated with times of economic turmoil and income struggles. However, it is important to note, that recently these countries populations are predicted to be shrinking at an increasing rate. Many economists are calling this a cause for concern as it means there may be fewer people able to take on existing jobs. Across all 4 graphs, we see, that contrary to increasing life expectancy, people in all countries are, on average, expected to have fewer children. This is especially interesting to note in the Lower Middle Income Countries and the Low and Low Middle income countries, because their populations have been growing at an increasing rate for since before the 50s. Likely, this was due to cultural practices of having large families. So what can we attribute the decrease to? Recently, in higher income countries, as the costs of living increase, people have intentionally opted to have smaller families, and having no kids is also becoming a more popular idea. It could also be due to resource constraints. Parents want to give their kids the best lives possible, and may not want to have kids if they cannot ensure that possibility. The death rates in the lower income countries are likely increasing due to the growth in wealth disparities between higher and lower income nations, and a declining birth rate does not seem to be helping. 
+  - **Interpretation of Diagram:** The least shocking of the results is shown in the high income countries bracket, where the net births and deaths remained relatively stable except for a few shocks here and there. These can likely be associated with times of economic turmoil and income struggles. However, it is important to note, that recently these countries populations are predicted to be shrinking at an increasing rate. Many economists are calling this a cause for concern as it means there may be fewer people able to take on existing jobs. Across all 5 graphs, we see, that contrary to increasing life expectancy, people in all countries are, on average, expected to have fewer children. This is especially interesting to note in the Lower Middle Income Countries and the Low income countries, because their populations have been growing at an increasing rate for since before the 50s. Likely, this was due to cultural practices of having large families. So what can we attribute the decrease to? Recently, in higher income countries, as the costs of living increase, people have intentionally opted to have smaller families, and having no kids is also becoming a more popular idea. It could also be due to resource constraints. Parents want to give their kids the best lives possible, and may not want to have kids if they cannot ensure that possibility. The death rates in the lower income countries are can be explained by increased access to resources, such as healthcare, resulting in a demographic transition with lower fertility rates.  
 
 ```{r}
 est_and_med <- rbind(estimates, mediums)
 
 est_and_med$region_subregion_country_area = factor(est_and_med$region_subregion_country_area, 
-                                      levels = c("High-and-upper-middle-income countries",
-                                                 "High-income countries",
+                                      levels = c("High-income countries",
                                                  "Upper-middle-income countries",
                                                  "Middle-income countries",
-                                                 "Low-and-middle-income countries",
                                                  "Lower-middle-income countries",
-                                                 "Low-and-Lower-middle-income countries",
                                                  "Low-income countries"))
 
 est_and_med |> 
-  filter(region_subregion_country_area %in% c("High-and-upper-middle-income countries",
-                                              "High-income countries",  
-                                              "Upper-middle-income countries",
-                                              "Middle-income countries",
-                                              "Low-and-middle-income countries",
-                                              "Lower-middle-income countries",
-                                              "Low-and-Lower-middle-income countries",
-                                              "Low-income countries")) |>
+  filter(region_subregion_country_area %in% c("High-income countries",
+                                                 "Upper-middle-income countries",
+                                                 "Middle-income countries",
+                                                 "Lower-middle-income countries",
+                                                 "Low-income countries")) |>
   group_by(region_subregion_country_area, year) |>
   summarise(`Average Births` = mean(births_thousands, na.rm = T), 
             `Average Deaths` = mean(total_deaths_thousands, na.rm = T), 
@@ -404,7 +398,7 @@ est_and_med |>
   pivot_longer(cols = c("Average Births", "Average Deaths", "Difference in Averages"), 
                names_to = "rate_type", values_to = "averages") |>
   ggplot(aes(x = year, y = averages, color = rate_type)) +
-  scale_color_manual(values=c('chartreuse4','#DAB1DA', "lightblue"))+
+  scale_color_manual(values = c('chartreuse4','#DAB1DA', "lightblue"))+
   geom_line() +
   scale_y_continuous(labels = unit_format(unit = "K", scale = 1e-3)) +
   facet_wrap(~region_subregion_country_area, ncol = 2) +
@@ -452,6 +446,7 @@ estimates |> filter(region_subregion_country_area %in%
 5. Diagram 5: Jonathan Sarasa
 - **Question:** How has the Female/Male Life Expectancy Gap changed between the United States and Australia?
   - **Interpretation of Diagram:** In both the United States and Australia populations, females have consistently longer lifespans than men. In this diagram, the difference varies between 5 years - 8 years for the United States and between 3.7 - 7 years for Australia (between 1950-2023). Both the USA and Australia show similar trends in terms of female/male life expectancy gap changes. In 1950, the life expectancy gap was between 5-6 years for both countries before shooting up to its largest gap in the 1980s then declining into the 21st century. The life expectancy gap between women and men has been larger in the USA, except during a brief period around 1999 - when Australia had a larger gap than the USA. Covid-19 affected both of these charts, as it appears that Covid caused in the USA a drastic spike in male mortalility which was not matched my female rates of increased mortality. This caused an increase in the gap between male and female life expectancy at birth in 2020. Interestingly, around 2020, Australia shows a decrease in the gap between male and female life expectancy and then a small spike upwards around 2020. Covid-19 produced two different patterns in the female/male life expectancy gap in USA and Australia. This may be because Covid-19 did not cause as many deaths as much in Australia as it did in the US. As of 2024, Australia has 24,414 deaths from Covid while the USA has 1,219,487 deaths from Covid (https://www.worldometers.info/coronavirus).
+  
 ```{r}
 estimates %>%
   filter(region_subregion_country_area %in% c('United States of America', 'Australia')) %>%
@@ -510,11 +505,11 @@ graph6data %>%
   panel.grid = element_blank())
 ```
 
-```{r}
-# 7 Alicia
-# Question: How do the Infant Mortality Rates of China and the United States affect their natural change rates over the past 2 decades?
-# Interpretation: The data for China spans a wide range of infant mortality rates compared to the U.S. This indicates that there have been significant variations in healthcare access, socioeconomic conditions, or other factors affecting infant mortality over time or across regions. But the variability in natural change rate is more moderate in China compared to the U.S. This suggests that other factors have dampened the impact of infant mortaility rate on natural change rates. For the U.S, the low variability in infant mortality reflects consistent healthcare outcomes across regions and time. On the other hand, the high variability in natural changes suggest that other factors besides infant mortality rates are influencing natural change rates. The relatively steeper positive slope for the U.S. highlights a more sensitive elationship between infant mortality and natural change rates. Small changes in infant mortality seem to correspond to larger changes in the natural change rate, possibly due to the demographic dynamics of a more developed population. The flater slope for China indicates that the historical one-child policy may have diminished the impact.
+7. Diagram 7 Alicia Zhou
+**Question:** How do the Infant Mortality Rates of China and the United States affect their natural change rates over the past 2 decades?
+**Interpretation:** The data for China spans a wide range of infant mortality rates compared to the U.S. This indicates that there have been significant variations in healthcare access, socioeconomic conditions, or other factors affecting infant mortality over time or across regions. But the variability in natural change rate is more moderate in China compared to the U.S. This suggests that other factors have dampened the impact of infant mortaility rate on natural change rates. For the U.S, the low variability in infant mortality reflects consistent healthcare outcomes across regions and time. On the other hand, the high variability in natural changes suggest that other factors besides infant mortality rates are influencing natural change rates. The relatively steeper positive slope for the U.S. highlights a more sensitive elationship between infant mortality and natural change rates. Small changes in infant mortality seem to correspond to larger changes in the natural change rate, possibly due to the demographic dynamics of a more developed population. The flater slope for China indicates that the historical one-child policy may have diminished the impact.
 
+```{r}
 # Set the time frame
 current_year <-2024
 start_year <- current_year - 20
@@ -536,11 +531,11 @@ ggplot(aes(x = infant_morality_rate_infant_deaths_per_1000_births, y = rate_of_n
   theme_minimal()
 ```
 
-```{r}
-# 8 Alicia
-# Question: How does the income range of different countries correlate with the sex ratio at birth, and are there observable differences?
+8. Diagram 8 Alicia Zhou
+**Question:** How does the income range of different countries correlate with the sex ratio at birth, and are there observable differences?
+**Interpretation:** The income group with the highest sex ratio is upper-middle-income countries (around 110 males per 100 females), the income group with the lowest sex ratio is low-income countries (around 104 males per 100 females). In general, lower the income, lower the average sex ratio at birth. However, surprisingly, high-income countries have the second lowest sex ratio at birth, reflecting relatively balanced demographic pattern. The elevated ratios in upper-middle-income and high-income countries might reflect gender preferences, particularly in regions where son preference exists. It could also indicate the use of medical technologies like prenatal sex determination followed by selective practices. Low-income countries may reflect minimal external intervention in the natural sex ratio due to limited access to such technologies or stronger adherence to natural birth outcomes.
 
-#Interpretation: The income group with the highest sex ratio is upper-middle-income countries (around 110 males per 100 females), the income group with the lowest sex ratio is low-income countries (around 104 males per 100 females). In general, lower the income, lower the average sex ratio at birth. However, surprisingly, high-income countries have the second lowest sex ratio at birth, reflecting relatively balanced demographic pattern. The elevated ratios in upper-middle-income and high-income countries might reflect gender preferences, particularly in regions where son preference exists. It could also indicate the use of medical technologies like prenatal sex determination followed by selective practices. Low-income countries may reflect minimal external intervention in the natural sex ratio due to limited access to such technologies or stronger adherence to natural birth outcomes.
+```{r}
 
 # Set Time Frame
 current_year <-2023
@@ -567,7 +562,7 @@ ggplot(aes(x = reorder(region_subregion_country_area, - AverageSexRatio), y = Av
         plot.margin = margin(1,1,1,1, "cm"))
 ```
 
-9 Anusha
+9. Diagram 9 Anusha Chinthamaduka
 - **Question:** How have mortality rates across different age groups changed over time in Australia?
 - **Interpretation**: This graph illustrates mortality rates in Australia (from 1950 to 2020) by various age groups (infant mortality, total mortality under age 40, total mortality under age 60, and under age 5). In the graph, all age groups show a significant decline in mortality rates over time, which can be attributed to the rapid improvements in health care and living conditions. The mortality rates of those under 60 showed the most significant and steepest decline. This could be due to the increased access in healthcare that occurred in the 1980s due to the introduction of Australia's Universal Health Care system. In addition, infant mortality rates and under 5 mortality rates seem to converge close to zero around 2020. These declines are most likely a result from advancements in neonatal care and widespread vaccination programs. Overall by 2020, mortality rates across all age groups have decreased dramatically, emphasizing Australia's progress in public health and the near-zero rates for infant and under-5 mortality, showcase the significant advancement in reducing preventable deaths in Australia.
 
@@ -601,7 +596,7 @@ ggplot(australia_data, aes(x = year,
        color = "Age Group")
 ```
 
-10 Anusha
+10. Diagram 10 Anusha Chinthamaduka
 **Question:** How do the infant mortality rates in Australia and the United States compare across different decades?
 **Interpretation** This bar chart compares the average infant mortality rates (per 1,000 live births) in Australia and the United States across decades, spanning from 1950 to 2020. According to the graph, it appears that both Australia and the United States experienced a significant decline in infant mortality rates over the decades. The United States seems to have a consistently higher infant mortality rate than Australia across all decades but it also had a more significant decline. The introduction of Medicaid in 1965 could be a contributor to this steep decline. By 2020, it seems like both countries achieved a low infant mortality rate of approximately 2–4 per 1,000 live births which reflects significant advancements in public health initiatives.
 
@@ -625,7 +620,7 @@ ggplot(filtered_data, aes(x = factor(decade),
        fill = "Country")
 ```
 
-11 Anusha
+11. Diagram 11 Anusha Chinthamaduka
 **Question:** How have net migration rates changed over time in Australia vs United States?
 **Interpretation:** This line chart displays net migration rates (per 1,000 people) for Australia and the United States from 1950 to 2020. According to the chart, Australia's net migration rates appear to be consistently higher and more variable than the United States over time. This could be due to Australia's more active pro-immigration policies than the US as well as Australia's reliance on immigration for economic growth (specifically to address labor shortages by immigrating skilled migrants). There also appears to be a peak net migration rate in Australia around 1970. This could be due to the "End of the White Australia Policy", which made it easier for individuals of other races to immigrate to Australia. There is also a sharp decline in immigration for both countries in 2020, which is a direct result of the COVID-19 pandemic and the strict immigration laws that were present during this time.
 
@@ -646,12 +641,11 @@ ggplot(filtered_data, aes(x = year,
        color = "Region")
 ```
 
+12. Diagram 12 Alicia Zhou
+**Question:**
+**Interpretation:** The number of live births surviving to age 1 in the U.S. is significantly higher than in Australia throughout the time period. This reflects the much larger population in the U.S. The U.S. line shows an increase during the post-World War II baby boom (1940s–1960s) and a noticeable decline in the 1970s, which aligns with demographic changes such as lower fertility rates following the baby boom. The numbers stabilize after the 1980s but exhibit a slight decline in the 2000s, reflecting trends in lower birth rates or other demographic changes. The number of live births surviving to age 1 in Australia remains relatively constant. The trend shows a gradual increase over time but without significant fluctuations. This steady trend reflects Australia’s relatively stable fertility rates and improvements in healthcare access over the years.
 
 ```{r}
-# 12 Alicia
-# Question:
-# Interpretation: The number of live births surviving to age 1 in the U.S. is significantly higher than in Australia throughout the time period. This reflects the much larger population in the U.S. The U.S. line shows an increase during the post-World War II baby boom (1940s–1960s) and a noticeable decline in the 1970s, which aligns with demographic changes such as lower fertility rates following the baby boom. The numbers stabilize after the 1980s but exhibit a slight decline in the 2000s, reflecting trends in lower birth rates or other demographic changes. The number of live births surviving to age 1 in Australia remains relatively constant. The trend shows a gradual increase over time but without significant fluctuations. This steady trend reflects Australia’s relatively stable fertility rates and improvements in healthcare access over the years.
-
 # Get necessary data
 estimates |>
   filter(region_subregion_country_area %in% c("Australia", "United States of America")) |>
@@ -666,11 +660,6 @@ estimates |>
        color = "Country") +
   theme_minimal()
 ```
-
-
-
-
-
 
 **5. Requirement-5 (2 pt)**
 Having developed a strong understanding of your data, you'll now create a machine learning (ML) model to predict a specific metric. This involves selecting the most relevant variables from your dataset.
@@ -766,7 +755,30 @@ predict_data <- mutate(predict_data, predicted_2100_pop = predicted_values)
 #pop_2100 is the UN's predicted population value for 2100, predicted_2100_pop is ours
 
 # Comparison with original prediction
+
 ```
+
+
+```{r}
+
+mediums2100 <- mediums |> filter(year == 2100)
+mediums2100$undata <- mediums2100$total_pop_january_thousands
+predict_data$mlr_pop <- predict_data$total_pop_january_thousands
+predict_data |> left_join(mediums2100, join_by(region_subregion_country_area))  |> 
+  select(region_subregion_country_area, mlr_pop, undata) |>
+  mutate(diff = mlr_pop - undata, 
+         avg_diff = mean(diff), # mean differences between estimates and actual data
+         med_diff = median(diff), # median differences
+         sq_error = (undata - mlr_pop)^2, 
+         sse = sum(sq_error), 
+         mse = 1/47 * sse) |> select(-sse, -sq_error)
+```
+**Analysis** Our intentions with creating this model were to try to estimate the data as best as we could with the fewest amount of predictors possible. After looking into how the UN recommended predicting data, we decided to create a model that accounted for birth rates, death rates, and migratory populations. In order to ensure our model met the proper assumptions of a linear regression model, we created histograms to depict the actual data and correct, via log transformations, to become more normally distributed. The two variables with a strong right skew, total population and the predicted populations, received a log transformation as a result. We also considered multicollinearity, especially between the life expectancy data and births and death. To minimize error, we omitted the variable from the model as it did not explain additional variability in the explanatory variable.
+As a result, we ended up with a model with a very high R^2, meaning that we were able to explain 99.39% of the variation in the explanatory variable with our chosen predictors. However, it is likely that the UN did not rely solely on a multiple linear regression model to inform their estimates. We can deduce this from the fact that our model used the same general categories as theirs, but the values do not completely align. Their methodology states that their probabilistic scenarios included uncertainty in their predictors, which differs from ours in that our data was only informed by one data set, and theirs incorporated the predictions and aggregates of 2,000. These discrepancies in methodology, chosen predictors, and in data collection are likely the cause of the differences in our estimates. 
+
+United Nations, Department of Economic and Social Affairs, Population Division (2024). World Population
+Prospects 2024: Methodology of the United Nations population estimates and projections. UN
+DESA/POP/2024/DC/NO. 10, July 2024 [Advance unedited version].
 
 **6.  Requirement-5 (1 pt)**
 

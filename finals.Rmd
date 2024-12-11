@@ -400,6 +400,7 @@ estimates %>%
   theme(plot.caption = element_text(hjust = 0),
         plot.title = element_text(face = "bold"),
         plot.subtitle = element_text(face = "italic"))
+```
 
 2. Diagram 2: Sophia Giuliani
   - **Question:** Which income range has the largest variability in the number of births? Are countries of different income levels similar in terms of the average number of births? 

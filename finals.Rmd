@@ -196,8 +196,7 @@ combined %>%
                            Prospects in its 2024 publication, compared to its 2022 revision."),
        x = "Year",
        y = "Projection",
-       caption = "Data Source: UN, World Population Prospects 
-                 (2024)\nOurWorldinData.org/population-growth | CC BY") +
+       caption = "Data Source: UN, World Population Prospects (2024)\nOurWorldinData.org/population-growth | CC BY") +
 
   # Modify the y-axis tick marks
   # Citation: https://scales.r-lib.org/reference/unit_format.html
@@ -239,8 +238,7 @@ population_projections |>
   scale_y_continuous(labels = unit_format(unit = "B", scale = 1e-6)) +
   scale_x_continuous(breaks = c(2024, 2040, 2050, 2060, 2080, 2100)) +
   labs(title = "UN Population Projections as of 2024",
-       subtitle = "Population projection from the UN World Population 
-                  Prospects \nin its 2024 publication",
+       subtitle = "Population projection from the UN World Population Prospects \nin its 2024 publication",
        x = "Year",
        y = "Population Projection (in billions)")
 ```
@@ -282,7 +280,9 @@ estimates |> rbind (mediums) |>
   filter(region_subregion_country_area %in% c( "India", "China")) |>
 
   # Plot
-ggplot(aes(x = year, y = total_pop_july_thousands / 1e6, color = region_subregion_country_area)) +
+ggplot(aes(x = year, 
+           y = total_pop_july_thousands / 1e6, 
+           color = region_subregion_country_area)) +
   geom_line() +
   labs(title = "Population, 1950 - 2100",
        subtitle = "Projection from 2024 based on the UN's medium scenario.",
@@ -360,8 +360,7 @@ estimates %>%
        y = "Net Migration",
        
        # Use an escape sequence in the caption to get a new line
-       caption = "Data Source: UN, World Population Prospects 
-       (2024)\nOurWorldinData.org/population-growth | CC BY") +
+       caption = "Data Source: UN, World Population Prospects (2024)\nOurWorldinData.org/population-growth | CC BY") +
   theme(plot.caption = element_text(hjust = 0),
         plot.title = element_text(face = "bold")) 
 ```

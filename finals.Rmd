@@ -148,9 +148,9 @@ colnames(mediums) <- corrected_colnames
 
 # selecting only columns that we use in our replication and EDA
 
-estimates <- estimates |> select(index, year, region_subregion_country_area, type, total_pop_january_thousands, total_pop_july_thousands, rate_of_natural_change_per_1000, births_thousands, total_fertility_rate_live_births_per_woman, sex_ratio_at_birth_males_per_100_female_births, total_deaths_thousands, total_life_expectancy_at_birth_years, male_life_expectancy_at_birth_years, female_life_expectancy_at_birth_years, female_life_expectancy_at_age_15_years, infant_morality_rate_infant_deaths_per_1000_births, live_births_surviving_to_age_1_thousands, `deaths_under_age_5_per_1,000_live_births`, total_male_mortality_before_age_40_per_1000_births, total_mortality_before_age_60_per_1000_births, net_migration_rate_per_1000, crude_birth_rate_per_1000_pop, crude_death_rate_deaths_per_1000_population)
+estimates <- estimates |> select(index, year, region_subregion_country_area, type, total_pop_january_thousands, total_pop_july_thousands, rate_of_natural_change_per_1000, births_thousands, total_fertility_rate_live_births_per_woman, sex_ratio_at_birth_males_per_100_female_births, total_deaths_thousands, total_life_expectancy_at_birth_years, male_life_expectancy_at_birth_years, female_life_expectancy_at_birth_years, female_life_expectancy_at_age_15_years, infant_morality_rate_infant_deaths_per_1000_births, live_births_surviving_to_age_1_thousands, `deaths_under_age_5_per_1,000_live_births`, total_male_mortality_before_age_40_per_1000_births, total_mortality_before_age_60_per_1000_births, net_num_migrants_thousands, net_migration_rate_per_1000, crude_birth_rate_per_1000_pop, crude_death_rate_deaths_per_1000_population)
 
-mediums <- mediums |> select(index, year, region_subregion_country_area, type, total_pop_january_thousands, total_pop_july_thousands, rate_of_natural_change_per_1000, births_thousands, total_fertility_rate_live_births_per_woman, sex_ratio_at_birth_males_per_100_female_births, total_deaths_thousands, total_life_expectancy_at_birth_years, male_life_expectancy_at_birth_years, female_life_expectancy_at_birth_years, female_life_expectancy_at_age_15_years, infant_morality_rate_infant_deaths_per_1000_births, live_births_surviving_to_age_1_thousands, `deaths_under_age_5_per_1,000_live_births`, total_male_mortality_before_age_40_per_1000_births, total_mortality_before_age_60_per_1000_births, net_migration_rate_per_1000, crude_birth_rate_per_1000_pop, crude_death_rate_deaths_per_1000_population)
+mediums <- mediums |> select(index, year, region_subregion_country_area, type, total_pop_january_thousands, total_pop_july_thousands, rate_of_natural_change_per_1000, births_thousands, total_fertility_rate_live_births_per_woman, sex_ratio_at_birth_males_per_100_female_births, total_deaths_thousands, total_life_expectancy_at_birth_years, male_life_expectancy_at_birth_years, female_life_expectancy_at_birth_years, female_life_expectancy_at_age_15_years, infant_morality_rate_infant_deaths_per_1000_births, live_births_surviving_to_age_1_thousands, `deaths_under_age_5_per_1,000_live_births`, total_male_mortality_before_age_40_per_1000_births, total_mortality_before_age_60_per_1000_births, net_num_migrants_thousands, net_migration_rate_per_1000, crude_birth_rate_per_1000_pop, crude_death_rate_deaths_per_1000_population)
 ```
 
 
@@ -334,25 +334,20 @@ ggplot(life_expectancy_data, aes(x = year,
 
 ```{r}
 estimates %>%
-  select(net_migration_rate_per_1000, 
+  select(net_num_migrants_thousands, 
          year, 
          region_subregion_country_area) %>%
   filter(!is.na(year)) %>%
   filter(region_subregion_country_area == "Ukraine") %>%
   filter(year <= "2023" & year >= "1950") %>%
   ggplot(mapping = aes(x = year, 
-                       y = net_migration_rate_per_1000)) +
+                       y = net_num_migrants_thousands)) +
   geom_line(color = "blue") +
   geom_point(size = 0.5, 
              color = "blue") + # Need to make the points/dots smaller
   scale_x_continuous(breaks = c(1950, 1960, 1970, 1980, 1990, 2000, 2010, 2023)) + 
-  scale_y_continuous(breaks = c(-500, -400, -300, -200, -100, 0),
-                     labels = c("-5 million", 
-                                "-4 million", 
-                                "-3 million", 
-                                "-2 million", 
-                                "-1 million", 
-                                "0")) +
+  scale_y_continuous(breaks = seq(-5000, 0, by = 1000),
+                     labels = c("-5 million", "-4 million", "-3 million", "-2 million", "-1 million", "0")) +
   labs(title = "Annual net migration, 1950 to 2023",
        subtitle = str_wrap("The total number of immigrants (people moving into a given country) 
                            minus the number of emigrants (people moving out of the country)."),

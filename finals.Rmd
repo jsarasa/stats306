@@ -165,9 +165,10 @@ Show only the diagrams that are shown on the webpage with default options.
 - life expectancy from 1950 to 2023
 - annual net migration 1950 to 2023
 
-```{r}
-# Population Projections from 2024 (Sophia)
 
+1. **Diagram 1:** Population Projections from 2024 - Sophia Giuliani
+
+```{r}
 mediums %>% select(year) %>% filter(!is.na(year)) %>% range() # 2024 - 2100
 estimates %>% select(year) %>% filter(!is.na(year)) %>% range() # 1950 - 2023
 
@@ -191,10 +192,12 @@ combined %>%
 
   # Use an escape sequence to get a new line (to match the graph from article)
   labs(title = "How do UN Population projections compare to the previous\nrevision? World",
-       subtitle = str_wrap("The medium population projection from the UN's World Population Prospects in its 2024 publication, compared to its 2022 revision."),
+       subtitle = str_wrap("The medium population projection from the UN's World Population 
+                           Prospects in its 2024 publication, compared to its 2022 revision."),
        x = "Year",
        y = "Projection",
-       caption = "Data Source: UN, World Population Prospects (2024)\nOurWorldinData.org/population-growth | CC BY") +
+       caption = "Data Source: UN, World Population Prospects 
+                 (2024)\nOurWorldinData.org/population-growth | CC BY") +
 
   # Modify the y-axis tick marks
   # Citation: https://scales.r-lib.org/reference/unit_format.html
@@ -202,17 +205,24 @@ combined %>%
                                           scale = 1e-6)) +
   
   # Modify the caption position using hjust (see citation below)
-  # Citation: https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/#change-caption-position
+  # Citation:
+  # https://www.datanovia.com/en/blog/ggplot-title-subtitle-and-caption/#change-caption-position
   theme(plot.caption = element_text(hjust = 0),
         plot.title = element_text(face = "bold"))
 ```
 
+
+
+
+2. **Diagram 2:** Projections broken down by world and continent - Shalini
+
+
 ```{r}
-# projections broken down by world and continent (Shalini)
 population_projections <- mediums |> 
   select(year, region_subregion_country_area, total_pop_january_thousands) |>
-  filter(region_subregion_country_area %in%
-           c("World", "Africa", "Asia", "Europe", "Northern America", "Latin America and the Carribean"))
+  filter(region_subregion_country_area %in% c("World", "Africa", "Asia", 
+                                              "Europe", "Northern America", 
+                                              "Latin America and the Carribean"))
 
 population_projections$facet = factor(population_projections$region_subregion_country_area, 
                                       levels = c("World", "Africa", "Asia", "Europe", 
@@ -229,18 +239,24 @@ population_projections |>
   scale_y_continuous(labels = unit_format(unit = "B", scale = 1e-6)) +
   scale_x_continuous(breaks = c(2024, 2040, 2050, 2060, 2080, 2100)) +
   labs(title = "UN Population Projections as of 2024",
-       subtitle = "Population projection from the UN World Population Prospects \nin its 2024 publication",
+       subtitle = "Population projection from the UN World Population 
+                  Prospects \nin its 2024 publication",
        x = "Year",
        y = "Population Projection (in billions)")
 ```
 
 
+
+
+3. **Diagram 3:** Fertility rate in children/woman from 1950 - 2100 - Jonathan
+
+
 ```{r}
-# fertility rate in children/woman from 1950 - 2100 (Jonathan)
 estimates %>%
   rbind(mediums) %>% 
   filter(region_subregion_country_area %in% c('World', 'Africa', 'Asia',
-                                              'Northern America','Latin America and the Caribbean',
+                                              'Northern America',
+                                              'Latin America and the Caribbean',
                                               'Europe')) %>%
   ggplot(aes(x = year, y = total_fertility_rate_live_births_per_woman,
              color = region_subregion_country_area)) +
@@ -256,8 +272,11 @@ estimates %>%
   theme_classic()
 ```
 
+
+
+4. **Diagram 4:** Population 1950 to 2100 - Alicia
+
 ```{r}
-# population 1950 to 2100 (Alicia)
 # Filter data for India and China from 1950 to 2100
 estimates |> rbind (mediums) |>
   filter(region_subregion_country_area %in% c( "India", "China")) |>
@@ -274,21 +293,30 @@ ggplot(aes(x = year, y = total_pop_july_thousands / 1e6, color = region_subregio
 ```
 
 
+
+
+5. **Diagram 5:** Life expectancy from 1950 to 2023 - Anusha
+
 ```{r}
-# life expectancy from 1950 to 2023 (Anusha)
 life_expectancy_data <- estimates %>%
   select(year, region_subregion_country_area, total_life_expectancy_at_birth_years) %>%
-  filter(region_subregion_country_area %in% c("World", "Northern America", "Europe", "Asia", "Africa", "Latin America and the Caribbean"))
+  filter(region_subregion_country_area %in% c("World", "Northern America", "Europe", 
+                                              "Asia", "Africa", 
+                                              "Latin America and the Caribbean"))
 
-ggplot(life_expectancy_data, aes(x = year, y = total_life_expectancy_at_birth_years, color = region_subregion_country_area)) +
+ggplot(life_expectancy_data, aes(x = year, 
+                                 y = total_life_expectancy_at_birth_years, 
+                                 color = region_subregion_country_area)) +
   geom_line() +
   geom_point(size = 1) +
   labs(title = "Life Expectancy at Birth, 1950 to 2023",
        x = "Year",
        y = "Life Expectancy (Years)",
        color = "Region") +
-  scale_y_continuous(limits = c(0, 80), breaks = seq(0, 80, by = 10)) + 
-  scale_x_continuous(limits = c(1950, 2023), breaks = seq(1950, 2023, by = 10)) + 
+  scale_y_continuous(limits = c(0, 80), 
+                     breaks = seq(0, 80, by = 10)) + 
+  scale_x_continuous(limits = c(1950, 2023), 
+                     breaks = seq(1950, 2023, by = 10)) + 
   theme_minimal() +
   scale_color_manual(values = c("World" = "blue", 
                                 "Northern America" = "purple", 
@@ -298,9 +326,13 @@ ggplot(life_expectancy_data, aes(x = year, y = total_life_expectancy_at_birth_ye
                                 "Latin America and the Caribbean" = "green"))
 ```
 
-```{r}
-# Annual Net Migration 1950 to 2023 (Sophia)
 
+
+
+
+6. **Diagram 6:** Annual net migration 1950 to 2023 - Sophia Giuliani
+
+```{r}
 estimates %>%
   select(net_migration_rate_per_1000, 
          year, 
@@ -322,15 +354,18 @@ estimates %>%
                                 "-1 million", 
                                 "0")) +
   labs(title = "Annual net migration, 1950 to 2023",
-       subtitle = str_wrap("The total number of immigrants (people moving into a given country) minus the number of emigrants (people moving out of the country)."),
+       subtitle = str_wrap("The total number of immigrants (people moving into a given country) 
+                           minus the number of emigrants (people moving out of the country)."),
        x = "Year",
        y = "Net Migration",
        
        # Use an escape sequence in the caption to get a new line
-       caption = "Data Source: UN, World Population Prospects (2024)\nOurWorldinData.org/population-growth | CC BY") +
+       caption = "Data Source: UN, World Population Prospects 
+       (2024)\nOurWorldinData.org/population-growth | CC BY") +
   theme(plot.caption = element_text(hjust = 0),
         plot.title = element_text(face = "bold")) 
 ```
+
 
 
 **4.  Requirement-4 (12 pt)**

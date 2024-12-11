@@ -650,12 +650,15 @@ start_year <- current_year - 20
 estimates |> rbind(mediums) |> 
   filter (region_subregion_country_area %in% c("China", "United States of America"), 
           year >= start_year, year<= current_year) |>
-  select (region_subregion_country_area, year, rate_of_natural_change_per_1000, infant_morality_rate_infant_deaths_per_1000_births) |>
+  select (region_subregion_country_area, year,
+          rate_of_natural_change_per_1000,
+          infant_morality_rate_infant_deaths_per_1000_births) |>
 
   
 #Plot
 ggplot(aes(x = infant_morality_rate_infant_deaths_per_1000_births, 
-           y = rate_of_natural_change_per_1000, color = region_subregion_country_area)) + 
+           y = rate_of_natural_change_per_1000, 
+           color = region_subregion_country_area)) + 
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) + 
   labs(title = "Impact of Infant Mortality Rates on Natural Change Rates",

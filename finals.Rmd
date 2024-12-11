@@ -58,30 +58,56 @@ You could also remove the countries/regions that you are not interested in explo
 
 Explain your reasoning for each clean up step.
 
+**Solution:** To clean and/or transform the data we performed the following steps shown in the code chunks below. 
+
+- Step 1: we created a seperate database called "est_values" that includes of all of the columns from estimates that are numbers, but the system recognizes these columns as characters, therefore, we converted them to numeric type using 'as.double'. We did this by mutating across the columns of character type and converting them to double type.
+    - converted text values to numeric on the columns that are of character type. 
+- Step 2: using the original estimates database we convert the column "Index" into a double.
+- Step 3: rewrite the dataframe to only include the following columns: (1) "Index" which is numeric, (2) "Region, subregion, country or area" which categorical type, and (3) "Type" which is categorical type. That is, we essentially only kept/selected the relevant columns.
+- Step 4: use a full join to join the estimates table with the dataframe that had all of the numeric values. We joined them by the key "Index" column that we created above in step 2. Then, we filtered the rows to only include/keep the rows that do NOT have Type value as 'Label/Seperator' and thus removed any irrelevant rows. 
+- Step 5-8: we repeated steps 1-4 in these steps for the mediums dataset
+- Step 9: rename columns names to make it more readable by removing spaces and making all of the column names only lowercase.
+- Step 10: select only columns that we use in our replication and EDA.
+
+
 ```{r}
+# Step 1: Convert text values to numeric on the columns that need this transformation
 est_values <- estimates |> 
   select(Index, Year:last_col()) |>
   mutate(across(where(is.character), as.double, .names = '{col}')) 
-  # converts all numeric columns from characters into doubles
-  # removes Label/Separator type
-estimates$Index <- estimates$Index |> as.double() 
-  # creates key column of Index and converts to double
-estimates <- estimates |> select(Index, `Region, subregion, country or area *`, 
-                                 Type)
-  # selecting relevant columns from original database
-estimates <- estimates |> full_join(est_values, join_by(Index)) |> filter(Type != "Label/Separator")
-  # only includes relevant data in Estimates
 
+# Step 2: creates key column of Index and converts to double
+estimates$Index <- estimates$Index |> as.double() 
+
+# Step 3: select only relevant columns from original database 
+# And remove any redundant columns
+estimates <- estimates |> 
+  select(Index, `Region, subregion, country or area *`, Type)
+
+# Step 4; Full join & remove irrelevant rows
+# Filter to keep rows that do NOT have Type value as 'Label/Separator'
+estimates <- estimates |> 
+  full_join(est_values, join_by(Index)) |> 
+  filter(Type != "Label/Separator") # only includes relevant data in Estimates
+
+# Step 5: replicated the above steps for the mediums dataset
 med_values <- mediums |>
   select(Index, Year:last_col()) |>
   mutate(across(where(is.character), as.double, .names = '{col}')) 
+
+# Step 6
 mediums$Index <- mediums$Index |> as.double() 
-mediums <- mediums |> select(Index, `Region, subregion, country or area *`, 
-                                 Type)
-mediums <- mediums |> full_join(med_values, join_by(Index)) |> filter(Type != "Label/Separator")
-  # replicated the above for the mediums dataset
+
+# Step 7
+mediums <- mediums |> 
+  select(Index, `Region, subregion, country or area *`, Type)
+
+# Step 8: Full join
+mediums <- mediums |> 
+  full_join(med_values, join_by(Index)) |> 
+  filter(Type != "Label/Separator")
   
-#renaming columns
+# Step 9: renaming columns to make it more readable
 corrected_colnames <- c(
   "index", 
   "region_subregion_country_area", 
@@ -146,12 +172,38 @@ corrected_colnames <- c(
 colnames(estimates) <- corrected_colnames
 colnames(mediums) <- corrected_colnames
 
-# selecting only columns that we use in our replication and EDA
+# Step 10: selecting only columns that we use in our replication and EDA
+estimates <- estimates |> 
+  select(index, year, region_subregion_country_area, type, total_pop_january_thousands, 
+         total_pop_july_thousands, rate_of_natural_change_per_1000, births_thousands, 
+         total_fertility_rate_live_births_per_woman, 
+         sex_ratio_at_birth_males_per_100_female_births, total_deaths_thousands, 
+         total_life_expectancy_at_birth_years, male_life_expectancy_at_birth_years, 
+         female_life_expectancy_at_birth_years, female_life_expectancy_at_age_15_years, 
+         infant_morality_rate_infant_deaths_per_1000_births, 
+         live_births_surviving_to_age_1_thousands, 
+         `deaths_under_age_5_per_1,000_live_births`, 
+         total_male_mortality_before_age_40_per_1000_births, 
+         total_mortality_before_age_60_per_1000_births, net_num_migrants_thousands, 
+         net_migration_rate_per_1000, crude_birth_rate_per_1000_pop, 
+         crude_death_rate_deaths_per_1000_population)
 
-estimates <- estimates |> select(index, year, region_subregion_country_area, type, total_pop_january_thousands, total_pop_july_thousands, rate_of_natural_change_per_1000, births_thousands, total_fertility_rate_live_births_per_woman, sex_ratio_at_birth_males_per_100_female_births, total_deaths_thousands, total_life_expectancy_at_birth_years, male_life_expectancy_at_birth_years, female_life_expectancy_at_birth_years, female_life_expectancy_at_age_15_years, infant_morality_rate_infant_deaths_per_1000_births, live_births_surviving_to_age_1_thousands, `deaths_under_age_5_per_1,000_live_births`, total_male_mortality_before_age_40_per_1000_births, total_mortality_before_age_60_per_1000_births, net_num_migrants_thousands, net_migration_rate_per_1000, crude_birth_rate_per_1000_pop, crude_death_rate_deaths_per_1000_population)
-
-mediums <- mediums |> select(index, year, region_subregion_country_area, type, total_pop_january_thousands, total_pop_july_thousands, rate_of_natural_change_per_1000, births_thousands, total_fertility_rate_live_births_per_woman, sex_ratio_at_birth_males_per_100_female_births, total_deaths_thousands, total_life_expectancy_at_birth_years, male_life_expectancy_at_birth_years, female_life_expectancy_at_birth_years, female_life_expectancy_at_age_15_years, infant_morality_rate_infant_deaths_per_1000_births, live_births_surviving_to_age_1_thousands, `deaths_under_age_5_per_1,000_live_births`, total_male_mortality_before_age_40_per_1000_births, total_mortality_before_age_60_per_1000_births, net_num_migrants_thousands, net_migration_rate_per_1000, crude_birth_rate_per_1000_pop, crude_death_rate_deaths_per_1000_population)
+mediums <- mediums |> 
+  select(index, year, region_subregion_country_area, type, total_pop_january_thousands, 
+         total_pop_july_thousands, rate_of_natural_change_per_1000, births_thousands, 
+         total_fertility_rate_live_births_per_woman, 
+         sex_ratio_at_birth_males_per_100_female_births, total_deaths_thousands, 
+         total_life_expectancy_at_birth_years, male_life_expectancy_at_birth_years, 
+         female_life_expectancy_at_birth_years, female_life_expectancy_at_age_15_years, 
+         infant_morality_rate_infant_deaths_per_1000_births, 
+         live_births_surviving_to_age_1_thousands, 
+         `deaths_under_age_5_per_1,000_live_births`, 
+         total_male_mortality_before_age_40_per_1000_births, 
+         total_mortality_before_age_60_per_1000_births, net_num_migrants_thousands, 
+         net_migration_rate_per_1000, crude_birth_rate_per_1000_pop, 
+         crude_death_rate_deaths_per_1000_population)
 ```
+
 
 
 **3.  Requirement-3 (3 pt)**

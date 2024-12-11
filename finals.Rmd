@@ -280,16 +280,15 @@ estimates |> rbind (mediums) |>
   filter(region_subregion_country_area %in% c( "India", "China")) |>
 
   # Plot
-ggplot(aes(x = year, 
-           y = total_pop_july_thousands / 1e6, 
-           color = region_subregion_country_area)) +
+ggplot(aes(x = year, y = total_pop_july_thousands / 1e6, color = region_subregion_country_area)) +
   geom_line() +
+  geom_point(size = 0.5)+
   labs(title = "Population, 1950 - 2100",
-       subtitle = "Projection from 2024 based on the UN's medium scenario.",
+       subtitle = "Projection from 2024 onwards are based on the UN's medium scenario.",
        x = "Year",
        y = "Population (in billions)",
        color = "Country") +
-  theme_minimal()
+  scale_color_manual(values = c("China" = "darkblue", "India" = "darkred"))
 ```
 
 

@@ -515,7 +515,8 @@ estimates |> filter(region_subregion_country_area %in%
 ```{r}
 estimates %>%
   filter(region_subregion_country_area %in% c('United States of America', 'Australia')) %>%
-  ggplot(aes(x = year, y = female_life_expectancy_at_birth_years - male_life_expectancy_at_birth_years,
+  ggplot(aes(x = year, 
+             y = female_life_expectancy_at_birth_years - male_life_expectancy_at_birth_years,
              color = region_subregion_country_area)) +
   geom_line() +
   scale_x_continuous(breaks = c(1950, 1980, 2000, 2020)) +
@@ -537,7 +538,9 @@ estimates %>%
 #Regions: USA, North America - USA, Latin America & Caribbean, Europe, Asia, Africa, Oceania
 graph6data <- estimates %>%
   rbind(mediums) %>% 
-  filter(region_subregion_country_area %in% c("United States of America", "Northern America", "Latin America and the Caribbean", 
+  filter(region_subregion_country_area %in% c("United States of America", 
+                                              "Northern America", 
+                                              "Latin America and the Caribbean", 
                                               "Europe", "Asia", "Africa", "Oceania")) %>% 
   filter(year %in% c(1950, 2020, 2100)) %>%
   group_by(year, region_subregion_country_area) %>%
@@ -545,11 +548,17 @@ graph6data <- estimates %>%
   
 # Remove USA from North America population
 graph6data <- graph6data %>% 
-  mutate(total_population = ifelse(region_subregion_country_area == "Northern America", total_population - sum(total_population[region_subregion_country_area == "United States of America"], na.rm = TRUE), total_population)) %>%
+  mutate(total_population = 
+           ifelse(region_subregion_country_area == "Northern America", 
+                  total_population - sum(total_population[region_subregion_country_area == 
+                                                            "United States of America"], na.rm = TRUE), 
+                  total_population)) %>%
   group_by(year) %>%
   mutate(global_population = sum(total_population, na.rm = TRUE)) %>% 
   mutate(proportion = total_population / global_population * 100) %>% 
-  mutate(region_subregion_country_area = ifelse(region_subregion_country_area == "Northern America", "Northern America (excluding USA)", region_subregion_country_area))
+  mutate(region_subregion_country_area = 
+           ifelse(region_subregion_country_area == "Northern America", "Northern America (excluding USA)", 
+                  region_subregion_country_area))
   
 # pie chart
 graph6data %>%
@@ -581,11 +590,16 @@ start_year <- current_year - 20
 
 # Get the necessary data
 estimates |> rbind(mediums) |> 
-  filter (region_subregion_country_area %in% c("China", "United States of America"), year >= start_year, year<= current_year) |> # Filter out the roles
-  select (region_subregion_country_area, year, rate_of_natural_change_per_1000, infant_morality_rate_infant_deaths_per_1000_births) |> # Filter out the columns
+  filter (region_subregion_country_area %in% c("China", "United States of America"), 
+          year >= start_year, year<= current_year) |> # Filter out the rows
+  select (region_subregion_country_area, year, 
+          rate_of_natural_change_per_1000, 
+          infant_morality_rate_infant_deaths_per_1000_births) |> 
 
 # Plot
-ggplot(aes(x = infant_morality_rate_infant_deaths_per_1000_births, y = rate_of_natural_change_per_1000, color = region_subregion_country_area)) + 
+ggplot(aes(x = infant_morality_rate_infant_deaths_per_1000_births, 
+           y = rate_of_natural_change_per_1000, 
+           color = region_subregion_country_area)) + 
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) + # Smooth the points to see trend
   labs(title = "Impact of Infant Mortality Rates on Natural Change Rates",
@@ -599,6 +613,8 @@ ggplot(aes(x = infant_morality_rate_infant_deaths_per_1000_births, y = rate_of_n
 8. Diagram 8 Alicia Zhou
   - **Question:** How does the income range of different countries correlate with the sex ratio at birth, and are there observable differences?
   - **Interpretation:** The income group with the highest sex ratio is upper-middle-income countries (around 110 males per 100 females), the income group with the lowest sex ratio is low-income countries (around 104 males per 100 females). In general, lower the income, lower the average sex ratio at birth. However, surprisingly, high-income countries have the second lowest sex ratio at birth, reflecting relatively balanced demographic pattern. The elevated ratios in upper-middle-income and high-income countries might reflect gender preferences, particularly in regions where son preference exists. It could also indicate the use of medical technologies like prenatal sex determination followed by selective practices. Low-income countries may reflect minimal external intervention in the natural sex ratio due to limited access to such technologies or stronger adherence to natural birth outcomes.
+
+
 ```{r}
 
 # Set Time Frame
@@ -607,13 +623,26 @@ start_year <- current_year - 30
 
 # Group the Income Ranges and Find Average Sex Ratio at Birth
 estimates |> 
-  filter(region_subregion_country_area %in% c("High-and-upper-middle-income countries", "Low-and-Lower-middle-income countries", "High-income countries", "Low-and-middle-income countries", "Middle-income countries", "Upper-middle-income countries", "Lower-middle-income countries", "Low-income countries", "No income group available"), year >= start_year, year<= current_year) |>
-   select(region_subregion_country_area, sex_ratio_at_birth_males_per_100_female_births, year) |>
+  filter(region_subregion_country_area %in% c("High-and-upper-middle-income countries", 
+                                              "Low-and-Lower-middle-income countries", 
+                                              "High-income countries", 
+                                              "Low-and-middle-income countries", 
+                                              "Middle-income countries", 
+                                              "Upper-middle-income countries", 
+                                              "Lower-middle-income countries", 
+                                              "Low-income countries", 
+                                              "No income group available"), 
+         year >= start_year, year<= current_year) |>
+  select(region_subregion_country_area, 
+         sex_ratio_at_birth_males_per_100_female_births, year) |>
   group_by(region_subregion_country_area) |>
-  summarize(AverageSexRatio = mean(sex_ratio_at_birth_males_per_100_female_births, na.rm = TRUE, count = n(), .group = 'drop')) |>
+  summarize(AverageSexRatio = mean(sex_ratio_at_birth_males_per_100_female_births, na.rm = TRUE, 
+                                   count = n(), .group = 'drop')) |>
 
 # Plot, bar chart shows distribution
-ggplot(aes(x = reorder(region_subregion_country_area, - AverageSexRatio), y = AverageSexRatio, fill = region_subregion_country_area)) + # Order the bars by decreasng average sex ratio to better visualize the highest and the lowest
+# Order the bars by decreasng average sex ratio to better visualize the highest and the lowest
+ggplot(aes(x = reorder(region_subregion_country_area, - AverageSexRatio), 
+           y = AverageSexRatio, fill = region_subregion_country_area)) + 
   geom_bar(stat = "identity", width = 0.7, show.legend = FALSE) +
   scale_fill_brewer(palette = "Paired") +
   labs(title = "Average Sex Ratio at Birth by Income Range",
@@ -621,10 +650,13 @@ ggplot(aes(x = reorder(region_subregion_country_area, - AverageSexRatio), y = Av
        y = "Average Sex Ratio at Birth (Males per 100 Female)") +
   theme_minimal() +
   coord_cartesian(ylim = c(100, 110)) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8), # create space for labels
+  theme(axis.text.x = element_text(angle = 45, 
+                                   hjust = 1, # create space for labels
+                                   size = 8), 
         plot.title = element_text(hjust = 0.5), 
         plot.margin = margin(1,1,1,1, "cm"))
 ```
+
 
 9. Diagram 9 Anusha Chinthamaduka
   - **Question:** How have mortality rates across different age groups changed over time in Australia?
@@ -660,6 +692,7 @@ ggplot(australia_data, aes(x = year,
        color = "Age Group")
 ```
 
+
 10. Diagram 10 Anusha Chinthamaduka
   - **Question:** How do the infant mortality rates in Australia and the United States compare across different decades?
   - **Interpretation** This bar chart compares the average infant mortality rates (per 1,000 live births) in Australia and the United States across decades, spanning from 1950 to 2020. According to the graph, it appears that both Australia and the United States experienced a significant decline in infant mortality rates over the decades. The United States seems to have a consistently higher infant mortality rate than Australia across all decades but it also had a more significant decline. The introduction of Medicaid in 1965 could be a contributor to this steep decline. By 2020, it seems like both countries achieved a low infant mortality rate of approximately 2–4 per 1,000 live births which reflects significant advancements in public health initiatives.
@@ -670,9 +703,11 @@ estimates <- estimates %>%
   mutate(decade = floor(year / 10) * 10) 
 
 filtered_data <- estimates %>%
-  filter(region_subregion_country_area %in% c("Australia", "United States of America")) %>%
+  filter(region_subregion_country_area %in% c("Australia", 
+                                              "United States of America")) %>%
   group_by(decade, region_subregion_country_area) %>%
-  summarise(avg_infant_mortality_rate = mean(infant_morality_rate_infant_deaths_per_1000_births, na.rm = TRUE))
+  summarise(avg_infant_mortality_rate = 
+              mean(infant_morality_rate_infant_deaths_per_1000_births, na.rm = TRUE))
 
 ggplot(filtered_data, aes(x = factor(decade), 
                           y = avg_infant_mortality_rate, 
@@ -683,6 +718,7 @@ ggplot(filtered_data, aes(x = factor(decade),
        y = "Average Infant Mortality Rate (Per 1,000 Live Births)",
        fill = "Country")
 ```
+
 
 11. Diagram 11 Anusha Chinthamaduka
   - **Question:** How have net migration rates changed over time in Australia vs United States?
@@ -711,6 +747,7 @@ ggplot(filtered_data, aes(x = year,
   - **Interpretation:** The number of live births surviving to age 1 in the U.S. is significantly higher than in Australia throughout the time period. This reflects the much larger population in the U.S. The U.S. line shows an increase during the post-World War II baby boom (1940s–1960s) and a noticeable decline in the 1970s, which aligns with demographic changes such as lower fertility rates following the baby boom. The numbers stabilize after the 1980s but exhibit a slight decline in the 2000s, reflecting trends in lower birth rates or other demographic changes. The number of live births surviving to age 1 in Australia remains relatively constant. The trend shows a gradual increase over time but without significant fluctuations. This steady trend reflects Australia’s relatively stable fertility rates and improvements in healthcare access over the years.
 
 
+
 ```{r}
 # Get necessary data
 estimates |>
@@ -718,7 +755,10 @@ estimates |>
   select(region_subregion_country_area, year, live_births_surviving_to_age_1_thousands) |>
 
 # Plot, line chart better for observing trends
-  ggplot(aes(x = year, y = live_births_surviving_to_age_1_thousands, group = region_subregion_country_area, color = region_subregion_country_area)) +
+  ggplot(aes(x = year, 
+             y = live_births_surviving_to_age_1_thousands, 
+             group = region_subregion_country_area, 
+             color = region_subregion_country_area)) +
   geom_line(size = 1.2) +
   labs(title = "Comparison of Live Births Surviving to Age 1 Between Australia and US",
        x = "Year",

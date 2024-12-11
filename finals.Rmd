@@ -402,9 +402,12 @@ estimates %>%
         plot.subtitle = element_text(face = "italic"))
 ```
 
+
+
 2. Diagram 2: Sophia Giuliani
   - **Question:** Which income range has the largest variability in the number of births? Are countries of different income levels similar in terms of the average number of births? 
   - **Interpretation of Diagram:** To answer this question entailing one categorical variable and one quantitive variable, box-plots can be of great visualizations. The variability in the number of births across each of the four income levels is indicated by the IQR which represents the spread of the middle 50% of the data (citation: https://www.statology.org/box-plot-variability/). Thus, based on the diagram below, the Low-and-Lower-Middle income level countries appear to have the largest variability in the number of births, followed by countries of Lower-Middle income levels. On the other hand, Upper-Middle income level countires demonstrate the smallest variation in the number of births as the IQR is the smallest. Furthermore, we see that Low-and-Lower-Middle income level countries have the highest average number of births. It appears as though, both High-and-Upper and Lower-Middle income level countries are similar in terms of their average number of births. 
+
 
 ```{r}
 estimates %>%
@@ -436,6 +439,7 @@ estimates %>%
          plot.caption = element_text(hjust = 0))
 
 ```
+
 
 3. Diagram 3: Shalini Asokkumar
   - **Question:** How is population growth affected by a country's development status? 

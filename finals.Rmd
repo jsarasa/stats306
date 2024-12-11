@@ -308,7 +308,7 @@ ggplot(life_expectancy_data, aes(x = year,
                                  y = total_life_expectancy_at_birth_years, 
                                  color = region_subregion_country_area)) +
   geom_line() +
-  geom_point(size = 0.5) +
+  geom_point(size = 1) +
   labs(title = "Life Expectancy at Birth, 1950 to 2023",
        x = "Year",
        y = "Life Expectancy (Years)",

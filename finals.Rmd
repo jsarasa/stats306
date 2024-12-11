@@ -60,9 +60,9 @@ Explain your reasoning for each clean up step.
 
 **Solution:** To clean and/or transform the data we performed the following steps shown in the code chunks below. 
 
-- Step 1: we created a seperate database called "est_values" that includes of all of the columns from estimates that are numbers, but the system recognizes these columns as characters, therefore, we converted them to numeric type using 'as.double'. We did this by mutating across the columns of character type and converting them to double type.
+- Step 1: we created a separate database called "est_values" that includes of all of the columns from estimates that are numbers, but the system recognizes these columns as characters, therefore, we converted them to numeric type using 'as.double'. We did this by mutating across the columns of character type and converting them to double type.
     - converted text values to numeric on the columns that are of character type. 
-- Step 2: using the original estimates database we convert the column "Index" into a double.
+- Step 2: using the original estimates database we convert the column "Index" into a double so that it could act as a key column when we later merged the dataframes.
 - Step 3: rewrite the dataframe to only include the following columns: (1) "Index" which is numeric, (2) "Region, subregion, country or area" which categorical type, and (3) "Type" which is categorical type. That is, we essentially only kept/selected the relevant columns.
 - Step 4: use a full join to join the estimates table with the dataframe that had all of the numeric values. We joined them by the key "Index" column that we created above in step 2. Then, we filtered the rows to only include/keep the rows that do NOT have Type value as 'Label/Seperator' and thus removed any irrelevant rows. 
 - Step 5-8: we repeated steps 1-4 in these steps for the mediums dataset

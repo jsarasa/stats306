@@ -398,7 +398,8 @@ estimates %>%
              color = "blue") + # Need to make the points/dots smaller
   scale_x_continuous(breaks = c(1950, 1960, 1970, 1980, 1990, 2000, 2010, 2023)) + 
   scale_y_continuous(breaks = seq(-5000, 0, by = 1000),
-                     labels = c("-5 million", "-4 million", "-3 million", "-2 million", "-1 million", "0")) +
+                     labels = c("-5 million", "-4 million", "-3 million", 
+                                "-2 million", "-1 million", "0")) +
   labs(title = "Annual net migration, 1950 to 2023",
        subtitle = str_wrap("The total number of immigrants (people moving into a given country) 
                            minus the number of emigrants (people moving out of the country)."),
@@ -584,6 +585,7 @@ estimates %>%
 6. Diagram 6: Jonathan Sarasa
 - **Question:** Comparing 1950 vs 2020 vs 2100, what proportion of global population growth did each region of the world contribute?
   - **Interpretation of Diagram:** This graphs shows shares of global population by continent in the year 1950, 2020, and 2100 (predicted). These graphs shows the massive population of Asia, relative to the other continents/regions of the World. I separated out the USA from the rest of Northern America, but the USA is the majority of the North American population. This graph shows the decline of USA and Europe as major shares of the world population, with both portions shrinking over the years. In the year of 2100, the population of Asia is almost matched by Africa. African countries are expected to have massive increases in populations as development continues, infant mortality decreases, and life expectancy increases significantly. The 2100 projection shows an increased world population which is majority African and Asian. These graphs also highlight how small the populations of USA and Europe are compared to the rest of the world, which stands in contrast to their economic power and colonialism over other world regions.
+
   
 ```{r}
 #Regions: USA, North America - USA, Latin America & Caribbean, Europe, Asia, Africa, Oceania
@@ -602,13 +604,15 @@ graph6data <- graph6data %>%
   mutate(total_population = 
            ifelse(region_subregion_country_area == "Northern America", 
                   total_population - sum(total_population[region_subregion_country_area == 
-                                                            "United States of America"], na.rm = TRUE), 
+                                                            "United States of America"], 
+                                         na.rm = TRUE), 
                   total_population)) %>%
   group_by(year) %>%
   mutate(global_population = sum(total_population, na.rm = TRUE)) %>% 
   mutate(proportion = total_population / global_population * 100) %>% 
   mutate(region_subregion_country_area = 
-           ifelse(region_subregion_country_area == "Northern America", "Northern America (excluding USA)", 
+           ifelse(region_subregion_country_area == "Northern America", 
+                                                   "Northern America (excluding USA)", 
                   region_subregion_country_area))
   
 # pie chart
@@ -630,10 +634,12 @@ graph6data %>%
   panel.grid = element_blank())
 ```
 
+
 7. Diagram 7 Alicia Zhou
 - **Question:** How do the Infant Mortality Rates of China and the United States affect their Natural Change Rates over the past 2 decades?
 
 - **Interpretation:** The data for China spans a wide range of infant mortality rates compared to the U.S. This indicates that there have been significant variations in healthcare access, socioeconomic conditions, or other factors affecting infant mortality over time or across regions. But the variability in natural change rate is more moderate in China compared to the U.S. This suggests that other factors have dampened the impact of infant mortality rate on natural change rates. For the U.S, the low variability in infant mortality reflects consistent healthcare outcomes across regions and time. On the other hand, the high variability in natural changes suggests that age distribution and fertility preferences might widely differ across states. The relatively steeper positive slope for the U.S. highlights a more sensitive relationship between infant mortality and natural change rates. Small changes in infant mortality seem to correspond to larger changes in the natural change rate, possibly due to the demographic dynamics of a more developed population. The flatter slope for China indicates that the historical one-child policy may have diminished the impact. 
+
 
 ```{r}
 #Set the time frame
@@ -642,12 +648,14 @@ start_year <- current_year - 20
 
 #Filter and select necessary data
 estimates |> rbind(mediums) |> 
-  filter (region_subregion_country_area %in% c("China", "United States of America"), year >= start_year, year<= current_year) |>
+  filter (region_subregion_country_area %in% c("China", "United States of America"), 
+          year >= start_year, year<= current_year) |>
   select (region_subregion_country_area, year, rate_of_natural_change_per_1000, infant_morality_rate_infant_deaths_per_1000_births) |>
 
   
 #Plot
-ggplot(aes(x = infant_morality_rate_infant_deaths_per_1000_births, y = rate_of_natural_change_per_1000, color = region_subregion_country_area)) + 
+ggplot(aes(x = infant_morality_rate_infant_deaths_per_1000_births, 
+           y = rate_of_natural_change_per_1000, color = region_subregion_country_area)) + 
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) + 
   labs(title = "Impact of Infant Mortality Rates on Natural Change Rates",
@@ -658,6 +666,7 @@ ggplot(aes(x = infant_morality_rate_infant_deaths_per_1000_births, y = rate_of_n
   theme_minimal()
 
 ```
+
 
 8. Diagram 8 Alicia Zhou
 - **Question:** How does the income range of different countries correlate with the sex ratio at birth, and are there observable differences in the past three decades?
@@ -711,6 +720,7 @@ ggplot(aes(x = reorder(region_subregion_country_area, - AverageSexRatio),
   - **Question:** How have mortality rates across different age groups changed over time in Australia?
   - **Interpretation**: This graph illustrates mortality rates in Australia (from 1950 to 2020) by various age groups (infant mortality, total mortality under age 40, total mortality under age 60, and under age 5). In the graph, all age groups show a significant decline in mortality rates over time, which can be attributed to the rapid improvements in health care and living conditions. The mortality rates of those under 60 showed the most significant and steepest decline. This could be due to the increased access in healthcare that occurred in the 1980s due to the introduction of Australia's Universal Health Care system. In addition, infant mortality rates and under 5 mortality rates seem to converge close to zero around 2020. These declines are most likely a result from advancements in neonatal care and widespread vaccination programs. Overall by 2020, mortality rates across all age groups have decreased dramatically, emphasizing Australia's progress in public health and the near-zero rates for infant and under-5 mortality, showcase the significant advancement in reducing preventable deaths in Australia.
 
+
 ```{r}
 australia_data <- estimates %>%
   filter(region_subregion_country_area == "Australia") %>%
@@ -723,10 +733,14 @@ australia_data <- estimates %>%
                names_to = "age_group",
                values_to = "mortality_rate") %>%
   mutate(age_group = case_when(
-    age_group == "infant_morality_rate_infant_deaths_per_1000_births" ~ "Infant Mortality (Per 1,000 Births)",
-    age_group == "deaths_under_age_5_per_1,000_live_births" ~ "Under Age 5 (Per 1,000 Births)",
-    age_group == "total_male_mortality_before_age_40_per_1000_births" ~ "Total Mortality <40 (Per 1,000)",
-    age_group == "total_mortality_before_age_60_per_1000_births" ~ "Total Mortality <60 (Per 1,000)",
+    age_group == "infant_morality_rate_infant_deaths_per_1000_births" ~ 
+                 "Infant Mortality (Per 1,000 Births)",
+    age_group == "deaths_under_age_5_per_1,000_live_births" ~ 
+                  "Under Age 5 (Per 1,000 Births)",
+    age_group == "total_male_mortality_before_age_40_per_1000_births" ~ 
+                 "Total Mortality <40 (Per 1,000)",
+    age_group == "total_mortality_before_age_60_per_1000_births" ~ 
+                 "Total Mortality <60 (Per 1,000)",
     TRUE ~ age_group
   ))
 
@@ -802,7 +816,9 @@ estimates |>
   select(region_subregion_country_area, year, live_births_surviving_to_age_1_thousands) |>
 
   # Plot, line chart better for observing trends
-  ggplot(aes(x = year, y = live_births_surviving_to_age_1_thousands, group = region_subregion_country_area, color = region_subregion_country_area)) +
+  ggplot(aes(x = year, 
+             y = live_births_surviving_to_age_1_thousands, 
+             group = region_subregion_country_area, color = region_subregion_country_area)) +
   geom_line(size = 1.2) +
   labs(title = "Comparison of Live Births Surviving to Age 1 Between Australia and US",
        x = "Year",
